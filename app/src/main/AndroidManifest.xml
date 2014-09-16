@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.turtleautoreplenishment"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="17"
+        android:targetSdkVersion="20" />
+    
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name">
+        <activity
+            android:name="com.example.turtleautoreplenishment.MainActivity"
+            android:label="@string/app_name" 
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity 
+            android:name="com.example.turtleautoreplenishment.ScanningActivity"
+            android:label="Scanning"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+        
+        <activity
+            android:name="com.example.turtleautoreplenishment.ScannedItemsActivity"
+            android:label="Items Scanned Thus Far"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+        
+        <activity 
+            android:name="com.example.turtleautoreplenishment.ChooseCustomerActivity"
+            android:label="Choose Customer"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+        
+    </application>
+
+</manifest>

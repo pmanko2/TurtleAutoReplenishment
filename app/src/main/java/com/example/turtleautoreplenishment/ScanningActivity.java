@@ -76,7 +76,7 @@ public class ScanningActivity extends FragmentActivity
 
             @Override
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-
+                viewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
@@ -92,6 +92,17 @@ public class ScanningActivity extends FragmentActivity
 
         actionBar.addTab(actionBar.newTab().setText("Auto").setTabListener(tabListener));
         actionBar.addTab(actionBar.newTab().setText("Manual").setTabListener(tabListener));
+
+        viewPager.setOnPageChangeListener(
+                new ViewPager.SimpleOnPageChangeListener()
+                {
+                    @Override
+                    public void onPageSelected(int position)
+                    {
+                        getActionBar().setSelectedNavigationItem(position);
+                    }
+                }
+        );
 
 		/*itemList = new ArrayList<ScannedItem>();
 		barCode = "";

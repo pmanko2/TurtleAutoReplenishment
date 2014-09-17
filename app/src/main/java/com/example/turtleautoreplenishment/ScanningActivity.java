@@ -12,9 +12,11 @@ import com.example.turtleautoreplenishment.barcodescanner.IntentResult;
 import com.example.turtleautoreplenishment.webservices.HttpClient;
 import com.example.turtleautoreplenishment.webservices.HttpDataDelegate;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -59,12 +61,37 @@ public class ScanningActivity extends FragmentActivity
 	protected void onCreate(Bundle savedInstanceState) 
 	{		
 		super.onCreate(savedInstanceState);
+        final ActionBar actionBar = getActionBar();
+
 		setContentView(R.layout.activity_scanning);
 
         pagerAdapter = new ReplenishmentPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.replenishment_pager);
 
         viewPager.setAdapter(pagerAdapter);
+
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        ActionBar.TabListener tabListener = new ActionBar.TabListener(){
+
+            @Override
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+            }
+
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+            }
+
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+            }
+        };
+
+        actionBar.addTab(actionBar.newTab().setText("Auto").setTabListener(tabListener));
+        actionBar.addTab(actionBar.newTab().setText("Manual").setTabListener(tabListener));
 
 		/*itemList = new ArrayList<ScannedItem>();
 		barCode = "";

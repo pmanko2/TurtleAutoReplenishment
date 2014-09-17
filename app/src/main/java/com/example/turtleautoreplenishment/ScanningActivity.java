@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -28,26 +29,31 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.NumberPicker;
 
-public class ScanningActivity extends FragmentActivity implements HttpDataDelegate
+public class ScanningActivity extends FragmentActivity
 {
-	private Activity currentActivity;
+	/*private Activity currentActivity;
 	private ArrayList<ScannedItem> itemList;
 	private boolean foundProduct;
 	private RadioGroup group;
 	private RadioButton autoRadioButton;
 	private TextView quantityPrompt;
 	private TextView productNumber;
-	private EditText itemQuantity;
-	private LinearLayout promptLayout;
+	private NumberPicker itemQuantity;
+	private RelativeLayout promptLayout;
 	private LinearLayout descriptionLayout;
 	private TextView productDescription;
 	private TextView productTurtleId;
 	private TextView productCustomerId;
-	private String barCode;
+	private String barCode;*/
+
+    ReplenishmentPagerAdapter pagerAdapter;
+    ViewPager viewPager;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -55,17 +61,24 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scanning);
 
-		itemList = new ArrayList<ScannedItem>();
+        pagerAdapter = new ReplenishmentPagerAdapter(getSupportFragmentManager());
+        viewPager = (ViewPager) findViewById(R.id.replenishment_pager);
+
+        viewPager.setAdapter(pagerAdapter);
+
+		/*itemList = new ArrayList<ScannedItem>();
 		barCode = "";
 		foundProduct = false;
+
+
 		
 		// initialize view items
 		group = (RadioGroup) findViewById(R.id.replenish_radio_group);
 		autoRadioButton =  (RadioButton) findViewById(R.id.auto_replenish_radio_button);
-		itemQuantity = (EditText) findViewById(R.id.item_quantity);
+		itemQuantity = (NumberPicker) findViewById(R.id.number_to_order);
 		quantityPrompt = (TextView) findViewById(R.id.quantity_prompt);
 		productNumber = (TextView) findViewById(R.id.product_number);
-		promptLayout = (LinearLayout) findViewById(R.id.prompt_layout);
+		promptLayout = (RelativeLayout) findViewById(R.id.prompt_layout);
 		productDescription = (TextView) findViewById(R.id.product_description);
 		productTurtleId = (TextView) findViewById(R.id.product_turtle_id);
 		productCustomerId = (TextView) findViewById(R.id.product_customer_id);
@@ -82,8 +95,11 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 		
 		Button scanButton = (Button) findViewById(R.id.button_scan);
 		Button viewScanned = (Button) findViewById(R.id.button_view_scanned);
+
+        itemQuantity.setMinValue(0);
+        itemQuantity.setMaxValue(10000);*/
 		
-		viewScanned.setOnClickListener(new OnClickListener(){
+		/*viewScanned.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) 
@@ -96,16 +112,17 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 				
 			}
 			
-		});
+		});*/
 		
 		
-		setRadioGroupListener();
-		handleScan(scanButton);
+		/*setRadioGroupListener();
+		handleScan(scanButton);*/
 	}
 	
-	protected void saveCurrentItem() 
+	/*protected void saveCurrentItem()
 	{
-		if(group.isPressed() && itemQuantity.getText().length() > 0 && foundProduct)
+        // &&itemQuantity.getText().length() > 0
+		if(group.isPressed() && foundProduct)
 		{
 			String replenishType = null;
 			
@@ -119,7 +136,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 			}
 			
 			ScannedItem item = new ScannedItem(productNumber.getText().toString(), replenishType, 
-					Integer.parseInt(itemQuantity.getText().toString()));
+					itemQuantity.getValue());
 			itemList.add(item);
 		}
 		
@@ -194,7 +211,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 				
 				if(foundProduct)
 				{
-					if(itemQuantity.getText().length() == 0)
+					*//*if(itemQuantity.is == 0)
 					{
 						if(autoRadioButton.isChecked())
 							createAlertDialog(true);
@@ -202,31 +219,31 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 							createAlertDialog(false);
 					}
 					else
-					{
-						String replenishType = null;
-						
-						if(autoRadioButton.isChecked())
-						{
-							replenishType = "Auto";
-						}
-						else
-						{
-							replenishType = "Manual";
-						}
-						
-						ScannedItem item = new ScannedItem(productNumber.getText().toString(), replenishType, 
-								Integer.parseInt(itemQuantity.getText().toString()));
-						itemList.add(item);
-						
-						group.setVisibility(View.INVISIBLE);
-						group.clearCheck();
-						itemQuantity.setVisibility(View.INVISIBLE);
-						quantityPrompt.setVisibility(View.INVISIBLE);
-						itemQuantity.setText("");
-						IntentIntegrator scanIntent = new IntentIntegrator(currentActivity);
-						scanIntent.initiateScan();
-						foundProduct = false;
-					}
+					{*//*
+                    String replenishType = null;
+
+                    if(autoRadioButton.isChecked())
+                    {
+                        replenishType = "Auto";
+                    }
+                    else
+                    {
+                        replenishType = "Manual";
+                    }
+
+                    ScannedItem item = new ScannedItem(productNumber.getText().toString(), replenishType,
+                            itemQuantity.getValue());
+                    itemList.add(item);
+
+                    group.setVisibility(View.INVISIBLE);
+                    group.clearCheck();
+                    itemQuantity.setVisibility(View.INVISIBLE);
+                    quantityPrompt.setVisibility(View.INVISIBLE);
+                    itemQuantity.setValue(0);
+                    IntentIntegrator scanIntent = new IntentIntegrator(currentActivity);
+                    scanIntent.initiateScan();
+                    foundProduct = false;
+					//}
 				}
 				else
 				{
@@ -341,6 +358,6 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 		
 		}
 		
-	}
+	}*/
 	
 }

@@ -1,10 +1,18 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:padding="4dip"
+    android:gravity="center_horizontal"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+
+    <android.support.v4.view.ViewPager
+    android:id="@+id/replenishment_pager"
+    android:layout_width="match_parent"
+    android:layout_height="0px"
+    android:layout_weight="1"/>
 
     <Button
         android:id="@+id/button_scan"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
@@ -13,7 +21,7 @@
 
     <Button
         android:id="@+id/button_view_scanned"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button_scan"
         android:layout_alignParentLeft="true"
@@ -21,94 +29,4 @@
         android:text="Save and View Items" />
 
 
-    <LinearLayout
-        android:id="@+id/product_info_layout"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="vertical">
-        
-        <TextView
-            android:id="@+id/product_number"
-            android:layout_width="wrap_content"
-            android:layout_height="0dip"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="22dp"
-            android:layout_weight="1"
-            android:text="4234789"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-        
-        <TextView
-	        android:id="@+id/product_customer_id"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_gravity="center_horizontal"
-	        android:text="4123409" />
-        
-        <TextView
-	        android:id="@+id/product_turtle_id"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_gravity="center_horizontal"
-	        android:text="41320948" />
-
-	    <TextView
-	        android:id="@+id/product_description"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_gravity="center_horizontal"
-	        android:text="its big" />
-        
-    </LinearLayout>
-
-    <RadioGroup
-        android:id="@+id/replenish_radio_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/manually_replenish_radio_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Manual Replenishment" />
-
-        <RadioButton
-            android:id="@+id/auto_replenish_radio_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Auto Replenishment" />
-    </RadioGroup>
-
-    <LinearLayout
-        android:id="@+id/prompt_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button_view_scanned"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="17dp" 
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/quantity_prompt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="41dp"
-            android:text="Enter quantity available: "
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
-        
-        
-        <EditText
-	        android:id="@+id/item_quantity"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:ems="10"
-	        android:inputType="number">
-
-    </EditText>
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

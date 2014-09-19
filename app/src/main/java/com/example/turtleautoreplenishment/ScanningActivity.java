@@ -21,6 +21,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -39,21 +40,6 @@ import android.widget.NumberPicker;
 
 public class ScanningActivity extends FragmentActivity
 {
-	/*private Activity currentActivity;
-	private ArrayList<ScannedItem> itemList;
-	private boolean foundProduct;
-	private RadioGroup group;
-	private RadioButton autoRadioButton;
-	private TextView quantityPrompt;
-	private TextView productNumber;
-	private NumberPicker itemQuantity;
-	private RelativeLayout promptLayout;
-	private LinearLayout descriptionLayout;
-	private TextView productDescription;
-	private TextView productTurtleId;
-	private TextView productCustomerId;
-	private String barCode;*/
-
     ReplenishmentPagerAdapter pagerAdapter;
     ViewPager viewPager;
 	
@@ -103,6 +89,8 @@ public class ScanningActivity extends FragmentActivity
                     }
                 }
         );
+
+        //ReplenishmentFragment scanningFragment = (ReplenishmentFragment) getSupportFragmentManager().findFragmentById(R.id.scanned_item_fragment);
 
 		/*itemList = new ArrayList<ScannedItem>();
 		barCode = "";

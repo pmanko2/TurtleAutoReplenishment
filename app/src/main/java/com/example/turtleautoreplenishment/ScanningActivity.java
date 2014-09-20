@@ -153,7 +153,8 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 		final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 
 		barCode = result.getContents();
-		
+
+        // scanning returns barcode - query db if barcode found otherwise indicate not found
 		if(barCode != null)
 		{
 			String finalBarCode = convertBarCodeToCorrectFormat(barCode);
@@ -176,7 +177,9 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 		}
 		
 	}
-	
+
+    // method converts scanned barcode to correct format
+    // correct format has 11 characters
 	private String convertBarCodeToCorrectFormat(String barCode) 
 	{
 		int codeLength = barCode.length();
@@ -210,17 +213,19 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 			@Override
 			public void onClick(View arg0) 
 			{	
-				
+				// if product was previously found, save that product
 				if(foundProduct)
 				{
                     boolean isAuto = viewPager.getCurrentItem() == 0;
-
                     String replenishType = (isAuto) ? "Auto" : "Manual";
+
+                    // get fragments from adapter
                     ReplenishmentFragment autoFragment = pagerAdapter.getRegisteredFragment(0);
                     ReplenishmentFragment manualFragment = pagerAdapter.getRegisteredFragment(1);
                     ReplenishmentFragment currentFragment = (isAuto) ? autoFragment : manualFragment;
 
-
+                    // TODO null check for fragments
+                    // TODO better memory management for reports/items recently scanned
                     ScannedItem item = new ScannedItem(currentFragment.getProductNumber(), replenishType,
                             currentFragment.getItemQuantity());
                     itemList.add(item);
@@ -243,34 +248,6 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 			
 		});
 	}
-	
-	private void createAlertDialog(boolean isAuto)
-	{
-		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-		alertBuilder.setTitle("Quantity Empty");
-		
-		if(isAuto)
-		{
-			alertBuilder.setMessage("Please Enter On Shelf Item Quantity");
-		}
-		else
-		{
-			alertBuilder.setMessage("Please Enter Item Quantity You Would Like To Order");
-		}
-		
-		alertBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) 
-			{
-				dialog.cancel();
-				
-			}
-		});
-		
-		AlertDialog dialog = alertBuilder.create();
-		dialog.show();
-	}
 
 	@Override
 	public void handleAsyncDataReturn(Object ret) 
@@ -287,7 +264,8 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 			try 
 			{
 				success = returnJson.getInt("success");
-				
+
+                // if product not found, indicate
 				if(success == 0)
 				{
 					autoFragment.setProductNotFound();
@@ -296,6 +274,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 				}
 				else
 				{
+                    // if product is found, show information on screen
 					//String customerId = returnJson.getString("customer_id");
 					String id = returnJson.getString("id");
 					String customerProductId = returnJson.getString("cust_product_id");

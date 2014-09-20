@@ -213,39 +213,24 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 				
 				if(foundProduct)
 				{
-					if(itemQuantity.is == 0)
-					{
-						if(autoRadioButton.isChecked())
-							createAlertDialog(true);
-						else
-							createAlertDialog(false);
-					}
-					else
-					{
-                    String replenishType = null;
+                    boolean isAuto = viewPager.getCurrentItem() == 0;
 
-                    if(autoRadioButton.isChecked())
-                    {
-                        replenishType = "Auto";
-                    }
-                    else
-                    {
-                        replenishType = "Manual";
-                    }
+                    String replenishType = (isAuto) ? "Auto" : "Manual";
+                    ReplenishmentFragment autoFragment = pagerAdapter.getRegisteredFragment(0);
+                    ReplenishmentFragment manualFragment = pagerAdapter.getRegisteredFragment(1);
+                    ReplenishmentFragment currentFragment = (isAuto) ? autoFragment : manualFragment;
 
-                    ScannedItem item = new ScannedItem(productNumber.getText().toString(), replenishType,
-                            itemQuantity.getValue());
+
+                    ScannedItem item = new ScannedItem(currentFragment.getProductNumber(), replenishType,
+                            currentFragment.getItemQuantity());
                     itemList.add(item);
 
-                    group.setVisibility(View.INVISIBLE);
-                    group.clearCheck();
-                    itemQuantity.setVisibility(View.INVISIBLE);
-                    quantityPrompt.setVisibility(View.INVISIBLE);
-                    itemQuantity.setValue(0);
+                    autoFragment.clearProductInfo();
+                    manualFragment.clearProductInfo();
+
                     IntentIntegrator scanIntent = new IntentIntegrator(currentActivity);
                     scanIntent.initiateScan();
                     foundProduct = false;
-					//}
 				}
 				else
 				{
@@ -286,41 +271,18 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 		AlertDialog dialog = alertBuilder.create();
 		dialog.show();
 	}
-	
-	private void setRadioGroupListener()
-	{
-		group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-		{
-
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) 
-			{
-				promptLayout.setVisibility(View.VISIBLE);
-				
-				if(checkedId == R.id.manually_replenish_radio_button)
-				{
-					quantityPrompt.setText("Enter quantity to order: ");
-				}
-				else
-				{
-					quantityPrompt.setText("Enter quantity left on shelf: ");
-				}				
-			}
-
-			
-		});
-	}
 
 	@Override
 	public void handleAsyncDataReturn(Object ret) 
 	{
+        ReplenishmentFragment autoFragment = pagerAdapter.getRegisteredFragment(0);
+        ReplenishmentFragment manualFragment = pagerAdapter.getRegisteredFragment(1);
+
 		if(ret instanceof JSONObject)
 		{
 			JSONObject returnJson = (JSONObject) ret;
 			
 			int success;
-			
-			descriptionLayout.setVisibility(View.VISIBLE);
 			
 			try 
 			{
@@ -328,9 +290,8 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 				
 				if(success == 0)
 				{
-					productNumber.setText("Could not find Product");
-					productNumber.setVisibility(View.VISIBLE);
-					
+					autoFragment.setProductNotFound();
+					manualFragment.setProductNotFound();
 					foundProduct = false;
 				}
 				else
@@ -339,17 +300,10 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 					String id = returnJson.getString("id");
 					String customerProductId = returnJson.getString("cust_product_id");
 					String description = returnJson.getString("description");
-					
-					productNumber.setText(barCode);
-					productDescription.setText(description);
-					productTurtleId.setText(id);
-					productCustomerId.setText(customerProductId);
-					
-					promptLayout.setVisibility(View.VISIBLE);
-					productNumber.setVisibility(View.VISIBLE);
-					group.setVisibility(View.VISIBLE);
-					
-					
+
+                    autoFragment.setProductFound(barCode, description, id, customerProductId);
+                    manualFragment.setProductFound(barCode, description, id, customerProductId);
+
 					foundProduct = true;
 				}
 				

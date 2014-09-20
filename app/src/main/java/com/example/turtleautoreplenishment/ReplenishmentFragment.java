@@ -102,6 +102,15 @@ public class ReplenishmentFragment extends Fragment
         productCustomerId.setText("");
     }
 
+    public void clearProductInfo()
+    {
+        itemQuantity.setVisibility(View.INVISIBLE);
+        productNumber.setText("");
+        productDescription.setText("");
+        productTurtleId.setText("");
+        productCustomerId.setText("");
+    }
+
     public String getProductNumber()
     {
         return productNumber.getText().toString();

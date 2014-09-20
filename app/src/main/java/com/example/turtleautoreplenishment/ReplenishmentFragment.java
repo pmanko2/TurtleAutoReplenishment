@@ -70,6 +70,9 @@ public class ReplenishmentFragment extends Fragment
         itemQuantity.setMinValue(0);
         itemQuantity.setMaxValue(10000);
         itemQuantity.setVisibility(View.INVISIBLE);
+        itemQuantity.setWrapSelectorWheel(true);
+        itemQuantity.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        itemQuantity.setOnLongPressUpdateInterval(10);
 
         productNumber.setText("");
         productDescription.setText("");
@@ -77,8 +80,6 @@ public class ReplenishmentFragment extends Fragment
         productCustomerId.setText("");
         quantityPrompt.setText("");
 
-        /*Intent intent = getIntent();
-        currentActivity = this;*/
 
         return fragmentView;
     }
@@ -91,6 +92,11 @@ public class ReplenishmentFragment extends Fragment
         productDescription.setText(pDescription);
         productTurtleId.setText(turtleID);
         productCustomerId.setText(custID);
+
+        if(fragmentNumber == 0)
+            quantityPrompt.setText("Enter quantity on shelf:");
+        else
+            quantityPrompt.setText("Enter quantity to order:");
     }
 
     public void setProductNotFound()
@@ -100,6 +106,7 @@ public class ReplenishmentFragment extends Fragment
         productDescription.setText("");
         productTurtleId.setText("");
         productCustomerId.setText("");
+        quantityPrompt.setText("");
     }
 
     public void clearProductInfo()
@@ -109,6 +116,7 @@ public class ReplenishmentFragment extends Fragment
         productDescription.setText("");
         productTurtleId.setText("");
         productCustomerId.setText("");
+        quantityPrompt.setText("");
     }
 
     public String getProductNumber()

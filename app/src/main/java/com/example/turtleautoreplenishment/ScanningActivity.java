@@ -38,16 +38,22 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.NumberPicker;
 
-public class ScanningActivity extends FragmentActivity
+public class ScanningActivity extends FragmentActivity implements HttpDataDelegate
 {
     ReplenishmentPagerAdapter pagerAdapter;
     ViewPager viewPager;
+    Activity currentActivity;
+    ArrayList<ScannedItem> itemList;
+    boolean foundProduct;
+    boolean isAuto;
+    String barCode;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{		
 		super.onCreate(savedInstanceState);
         final ActionBar actionBar = getActionBar();
+        isAuto = true;
 
 		setContentView(R.layout.activity_scanning);
 
@@ -90,83 +96,55 @@ public class ScanningActivity extends FragmentActivity
                 }
         );
 
-        //ReplenishmentFragment scanningFragment = (ReplenishmentFragment) getSupportFragmentManager().findFragmentById(R.id.scanned_item_fragment);
+        itemList = new ArrayList<ScannedItem>();
+        currentActivity = this;
+        Intent intent = getIntent();
+        String companyName = intent.getStringExtra("companyName");
+        setTitle("Scanning for " + companyName);
 
-		/*itemList = new ArrayList<ScannedItem>();
+        Button scanButton = (Button) findViewById(R.id.button_scan);
+        Button viewScanned = (Button) findViewById(R.id.button_view_scanned);
+
+        viewScanned.setOnClickListener(new OnClickListener(){
+
+            @Override
+            public void onClick(View v)
+            {
+                saveCurrentItem();
+
+                Intent scannedItems = new Intent(currentActivity, ScannedItemsActivity.class);
+                scannedItems.putParcelableArrayListExtra("scannedArray", itemList);
+                startActivity(scannedItems);
+
+            }
+
+        });
+
 		barCode = "";
 		foundProduct = false;
 
-
-		
-		// initialize view items
-		group = (RadioGroup) findViewById(R.id.replenish_radio_group);
-		autoRadioButton =  (RadioButton) findViewById(R.id.auto_replenish_radio_button);
-		itemQuantity = (NumberPicker) findViewById(R.id.number_to_order);
-		quantityPrompt = (TextView) findViewById(R.id.quantity_prompt);
-		productNumber = (TextView) findViewById(R.id.product_number);
-		promptLayout = (RelativeLayout) findViewById(R.id.prompt_layout);
-		productDescription = (TextView) findViewById(R.id.product_description);
-		productTurtleId = (TextView) findViewById(R.id.product_turtle_id);
-		productCustomerId = (TextView) findViewById(R.id.product_customer_id);
-		descriptionLayout = (LinearLayout) findViewById(R.id.product_info_layout);
-		
-		
-		productNumber.setVisibility(View.INVISIBLE);
-		
-		Intent intent = getIntent();
-		currentActivity = this;
-		
-		String companyName = intent.getStringExtra("companyName");
-		setTitle("Scanning for " + companyName);
-		
-		Button scanButton = (Button) findViewById(R.id.button_scan);
-		Button viewScanned = (Button) findViewById(R.id.button_view_scanned);
-
-        itemQuantity.setMinValue(0);
-        itemQuantity.setMaxValue(10000);*/
-		
-		/*viewScanned.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) 
-			{
-				saveCurrentItem();
-				
-				Intent scannedItems = new Intent(currentActivity, ScannedItemsActivity.class);
-				scannedItems.putParcelableArrayListExtra("scannedArray", itemList);
-				startActivity(scannedItems);
-				
-			}
-			
-		});*/
-		
-		
-		/*setRadioGroupListener();
-		handleScan(scanButton);*/
+		handleScan(scanButton);
 	}
 	
-	/*protected void saveCurrentItem()
+	protected void saveCurrentItem()
 	{
-        // &&itemQuantity.getText().length() > 0
-		if(group.isPressed() && foundProduct)
+        boolean isAuto = false;
+
+        if(viewPager.getCurrentItem() == 0)
+            isAuto = true;
+
+		if(foundProduct)
 		{
-			String replenishType = null;
-			
-			if(autoRadioButton.isChecked())
-			{
-				replenishType = "Auto";
-			}
-			else
-			{
-				replenishType = "Manual";
-			}
-			
-			ScannedItem item = new ScannedItem(productNumber.getText().toString(), replenishType, 
-					itemQuantity.getValue());
+			String replenishType = (isAuto) ? "Auto" : "Manual";
+            ReplenishmentFragment currentFragment = (isAuto) ? pagerAdapter.getRegisteredFragment(0) : pagerAdapter.getRegisteredFragment(1);
+
+			ScannedItem item = new ScannedItem(currentFragment.getProductNumber(), replenishType,
+					currentFragment.getItemQuantity());
 			itemList.add(item);
 		}
 		
 	}
+
 
 	// when scanning app returns information, gather the product number and display/do more later
 	@Override
@@ -188,14 +166,12 @@ public class ScanningActivity extends FragmentActivity
 		}
 		else
 		{
-			productNumber.setText("No Result Returned");
-			productNumber.setVisibility(View.VISIBLE);
-			
-			productTurtleId.setText("");
-			productCustomerId.setText("");
-			productDescription.setText("");
-			
-			descriptionLayout.setVisibility(View.VISIBLE);
+			ReplenishmentFragment autoFragment = pagerAdapter.getRegisteredFragment(0);
+            ReplenishmentFragment manualFragment = pagerAdapter.getRegisteredFragment(1);
+
+            autoFragment.setProductNotFound();
+            manualFragment.setProductNotFound();
+
 			foundProduct = false;
 		}
 		
@@ -237,7 +213,7 @@ public class ScanningActivity extends FragmentActivity
 				
 				if(foundProduct)
 				{
-					*//*if(itemQuantity.is == 0)
+					if(itemQuantity.is == 0)
 					{
 						if(autoRadioButton.isChecked())
 							createAlertDialog(true);
@@ -245,7 +221,7 @@ public class ScanningActivity extends FragmentActivity
 							createAlertDialog(false);
 					}
 					else
-					{*//*
+					{
                     String replenishType = null;
 
                     if(autoRadioButton.isChecked())
@@ -384,6 +360,6 @@ public class ScanningActivity extends FragmentActivity
 		
 		}
 		
-	}*/
+	}
 	
 }

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 /**
  * Created by Pawel on 9/16/2014.
  */
-public class ReplenishmentFragment extends Fragment implements HttpDataDelegate
+public class ReplenishmentFragment extends Fragment
 {
 
     private int fragmentNumber;
@@ -59,7 +59,7 @@ public class ReplenishmentFragment extends Fragment implements HttpDataDelegate
 
 
         // initialize view items
-        /*itemQuantity = (NumberPicker) fragmentView.findViewById(R.id.number_to_order);
+        itemQuantity = (NumberPicker) fragmentView.findViewById(R.id.number_to_order);
         quantityPrompt = (TextView) fragmentView.findViewById(R.id.quantity_prompt);
         productNumber = (TextView) fragmentView.findViewById(R.id.product_number);
         productDescription = (TextView) fragmentView.findViewById(R.id.product_description);
@@ -67,41 +67,26 @@ public class ReplenishmentFragment extends Fragment implements HttpDataDelegate
         productCustomerId = (TextView) fragmentView.findViewById(R.id.product_customer_id);
         descriptionLayout = (LinearLayout) fragmentView.findViewById(R.id.product_info_layout);
 
-
-        productNumber.setVisibility(View.INVISIBLE);
-
-        *//*Intent intent = getIntent();
-        currentActivity = this;*//*
-
-       *//* String companyName = intent.getStringExtra("companyName");
-        setTitle("Scanning for " + companyName);*//*
-
-        *//*Button scanButton = (Button) findViewById(R.id.button_scan);
-        Button viewScanned = (Button) findViewById(R.id.button_view_scanned);*//*
-
         itemQuantity.setMinValue(0);
-        itemQuantity.setMaxValue(10000);*/
+        itemQuantity.setMaxValue(10000);
+        itemQuantity.setVisibility(View.INVISIBLE);
 
+        productNumber.setText("");
+        productDescription.setText("");
+        productTurtleId.setText("");
+        productCustomerId.setText("");
+        quantityPrompt.setText("");
 
-        if(fragmentNumber == 0)
-        {
-            ((TextView) fragmentView.findViewById(R.id.quantity_prompt)).setText("Enter quantity on shelf:");
-        }
-        else
-        {
-            ((TextView) fragmentView.findViewById(R.id.quantity_prompt)).setText("Enter quantity to order:");
-        }
+        /*Intent intent = getIntent();
+        currentActivity = this;*/
 
         return fragmentView;
     }
 
-    @Override
-    public void handleAsyncDataReturn(Object ret) {
-
-    }
-
     public void setProductFound(String pNumber, String pDescription, String turtleID, String custID)
     {
+
+        itemQuantity.setVisibility(View.VISIBLE);
         productNumber.setText(pNumber);
         productDescription.setText(pDescription);
         productTurtleId.setText(turtleID);
@@ -110,10 +95,21 @@ public class ReplenishmentFragment extends Fragment implements HttpDataDelegate
 
     public void setProductNotFound()
     {
+        itemQuantity.setVisibility(View.INVISIBLE);
         productNumber.setText("Product Not Found");
         productDescription.setText("");
         productTurtleId.setText("");
         productCustomerId.setText("");
+    }
+
+    public String getProductNumber()
+    {
+        return productNumber.getText().toString();
+    }
+
+    public int getItemQuantity()
+    {
+        return itemQuantity.getValue();
     }
 }
 

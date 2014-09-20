@@ -14,12 +14,12 @@ import android.view.ViewGroup;
  */
 public class ReplenishmentPagerAdapter extends FragmentPagerAdapter
 {
-    SparseArray<Fragment> registeredFragments;
+    SparseArray<ReplenishmentFragment> registeredFragments;
 
     public ReplenishmentPagerAdapter(FragmentManager fm)
     {
         super(fm);
-        registeredFragments  = new SparseArray<Fragment>();
+        registeredFragments  = new SparseArray<ReplenishmentFragment>();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ReplenishmentPagerAdapter extends FragmentPagerAdapter
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        Fragment fragment = (Fragment) super.instantiateItem(container, position);
+        ReplenishmentFragment fragment = (ReplenishmentFragment) super.instantiateItem(container, position);
         registeredFragments.put(position, fragment);
         return fragment;
     }
@@ -52,7 +52,9 @@ public class ReplenishmentPagerAdapter extends FragmentPagerAdapter
         super.destroyItem(container, position, object);
     }
 
-    public Fragment getRegisteredFragment(int position) {
+    public ReplenishmentFragment getRegisteredFragment(int position) {
         return registeredFragments.get(position);
     }
+
+
 }

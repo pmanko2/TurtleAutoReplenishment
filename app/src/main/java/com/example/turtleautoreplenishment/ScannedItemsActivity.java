@@ -89,16 +89,18 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 			Log.i("JsonException: ", e.getMessage());
 		}
 		
-		params.add(new BasicNameValuePair("tag", "sending_report"));
+		params.add(new BasicNameValuePair("tag", "create_scanned_order"));
 		params.add(new BasicNameValuePair("report_json", request.toString()));
-		
-		//HttpClient.getInstance().getJsonInBackground("POST", this, params);
+
+        Log.i("Report Request: ", request.toString());
+
+		HttpClient.getInstance().getJsonInBackground("POST", this, params);
 		
 	}
 
 	@Override
 	public void handleAsyncDataReturn(Object ret) {
-		// TODO Auto-generated method stub
+		Log.i("Send report result: ", ret.toString());
 		
 	}
 }

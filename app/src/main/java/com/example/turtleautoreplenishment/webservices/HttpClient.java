@@ -53,7 +53,7 @@ public class HttpClient
 		
 		Log.i("Get Json called", delegate.toString());
 		
-		server_url = "http://www2.turtle.com/android/android_connect.php"; 
+		server_url = "http://www2.turtle.com/android/android_connect.php";
 		
 		new AsyncTask<Object, Object, Object>()
 		{

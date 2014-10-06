@@ -14,11 +14,14 @@ import com.example.turtleautoreplenishment.webservices.HttpDataDelegate;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -237,6 +240,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 	@Override
 	public void handleAsyncDataReturn(Object ret) 
 	{
+        // need fragments to change display of fragments when we get product data back
         ReplenishmentFragment autoFragment = pagerAdapter.getRegisteredFragment(0);
         ReplenishmentFragment manualFragment = pagerAdapter.getRegisteredFragment(1);
 
@@ -250,12 +254,10 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 			{
 				success = returnJson.getInt("success");
 
-                // if product not found, indicate
+                // if product not found, indicate and prompt if user wants to order anyway
 				if(success == 0)
 				{
-					autoFragment.setProductNotFound();
-					manualFragment.setProductNotFound();
-					foundProduct = false;
+                    promptAddProduct(returnJson);
 				}
 				else
 				{
@@ -279,5 +281,57 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 		}
 		
 	}
+
+    private boolean promptAddProduct(final JSONObject returnJson)
+    {
+        boolean add = false;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Product Not Found");
+        builder.setMessage("Would you like to order this product anyway?");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                handleProduct(returnJson, true);
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener(){
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                handleProduct(returnJson, false);
+            }
+        });
+
+        builder.create().show();
+
+        return add;
+    }
+
+    private void handleProduct(JSONObject returnJson, boolean add)
+    {
+        ReplenishmentFragment autoFragment = pagerAdapter.getRegisteredFragment(0);
+        ReplenishmentFragment manualFragment = pagerAdapter.getRegisteredFragment(1);
+
+        if(add)
+        {
+            try {
+                String barcode = returnJson.getString("barcode");
+                autoFragment.setProductFound(barCode, "","","");
+                foundProduct = true;
+            } catch (JSONException e) {
+                Log.e("JSON Error: ", "Barcode not found");
+            }
+        }
+        else
+        {
+            autoFragment.setProductNotFound();
+            manualFragment.setProductNotFound();
+            foundProduct = false;
+        }
+    }
 	
 }

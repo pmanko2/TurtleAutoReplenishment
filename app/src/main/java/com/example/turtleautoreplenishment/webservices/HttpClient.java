@@ -108,7 +108,7 @@ public class HttpClient
 	        	total.append( "\n" ); 
 	    }
 	    
-	    Log.i("JSON String length: ", "Length: " + total.length());
+	    Log.i("JSON Return String: ", total.toString());
 	    
 	    boolean success = true;
 

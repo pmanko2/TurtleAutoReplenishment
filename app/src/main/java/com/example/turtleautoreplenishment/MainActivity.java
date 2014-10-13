@@ -55,47 +55,64 @@ public class MainActivity extends FragmentActivity implements
 		usernameText = (EditText) findViewById(R.id.username_input);
 		passwordText = (EditText) findViewById(R.id.password_input);
 		loginButton = (Button) findViewById(R.id.login_button);
-		
+
+        //handler to clear error after user starts typing in field
+        usernameText.addTextChangedListener(new TextWatcher(){
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                usernameText.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 		
 		loginButton.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View arg0) 
 			{
-				checkInput();
-				
-				String userName = usernameText.getText().toString();
-				String password = passwordText.getText().toString();
-				String authentication = userName + ":" + password;
-				
-				AuthenticatedUser.getUser().setCredentials(userName, password, Base64.encodeToString(authentication.getBytes(), Base64.NO_WRAP));
-				
-				ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-				params.add(new BasicNameValuePair("tag", "confirm_login"));
-				
-				HttpClient.getInstance().getJsonInBackground("POST", MainActivity.this, params);
+				boolean error = checkInput(); //check if input correct
+
+                if(!error) //if correct input, send login request
+                {
+                    String userName = usernameText.getText().toString();
+                    String password = passwordText.getText().toString();
+                    String authentication = userName + ":" + password;
+
+                    AuthenticatedUser.getUser().setCredentials(userName, password, Base64.encodeToString(authentication.getBytes(), Base64.NO_WRAP));
+
+                    ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+                    params.add(new BasicNameValuePair("tag", "confirm_login"));
+
+                    HttpClient.getInstance().getJsonInBackground("POST", MainActivity.this, params);
+                }
 			}
 			
-			private void checkInput()
+			private boolean checkInput()
 			{
-				if(usernameText.getText().length() == 0 && passwordText.getText().length() == 0)
+                boolean isError = false;
+
+				if(usernameText.getText().length() == 0)
 				{
 					usernameText.setError("Please input a username");
-					passwordText.setError("Please input a password");
+                    isError = true;
 				}
-				else if(usernameText.getText().length() == 0)
-				{
-					usernameText.setError("Please input a username");
-				}
-				else if(passwordText.getText().length() == 0)
-				{
-					passwordText.setError("Please input a password");
-				}
-				else
-				{
-					return;
-				}
-				
+
+                if(passwordText.getText().length() == 0) {
+                    passwordText.setError("Please input a password");
+                    isError = true;
+                }
+
+                return isError;
 			}
 			
 		});

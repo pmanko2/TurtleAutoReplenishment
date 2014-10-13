@@ -35,6 +35,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
     private boolean foundProduct;
     private boolean isAuto;
     private String barCode;
+    private int companyID;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -88,6 +89,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
         currentActivity = this;
         Intent intent = getIntent();
         String companyName = intent.getStringExtra("companyName");
+        companyID = intent.getIntExtra("companyNumber",0);
         setTitle("Scanning for " + companyName);
 
         Button scanButton = (Button) findViewById(R.id.button_scan);
@@ -102,6 +104,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 
                 Intent scannedItems = new Intent(currentActivity, ScannedItemsActivity.class);
                 scannedItems.putParcelableArrayListExtra("scannedArray", itemList);
+                scannedItems.putExtra("companyID", companyID);
                 startActivity(scannedItems);
 
             }
@@ -282,6 +285,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 		
 	}
 
+    // Alert Dialog created to prompt if we want to add unknown product to order
     private boolean promptAddProduct(final JSONObject returnJson)
     {
         boolean add = false;

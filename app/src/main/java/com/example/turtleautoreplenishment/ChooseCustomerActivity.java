@@ -298,34 +298,12 @@ public class ChooseCustomerActivity extends FragmentActivity implements
 			{
 				Intent intent = new Intent(ChooseCustomerActivity.this, ScanningActivity.class);
 				intent.putExtra("companyName", list.get(position).getName());
+                intent.putExtra("companyNumber", position);
 				startActivity(intent);
 				
 			}
 			
 		});
-		
-		ImageButton nearestLocation = (ImageButton) findViewById(R.id.closest_location);
-		
-		
-		nearestLocation.setOnClickListener(new OnClickListener()
-		{
-
-			@Override
-			public void onClick(View v) 
-			{
-				Location current = CurrentLocation.getCurrentLocation().getLatestLocation();
-				
-				if(current == null)
-				{
-					Toast.makeText(ChooseCustomerActivity.this, "Location could not be pinpointed", Toast.LENGTH_LONG).show();
-				}
-				else
-				{
-					determineClosestCustomer(current);
-				}
-			}
-			
-		});	
 	}
 
 }

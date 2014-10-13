@@ -49,7 +49,6 @@ public class CustomerListAdapter extends ArrayAdapter<Customer> implements Obser
 		
 		TextView name = (TextView) view.findViewById(R.id.customer_name);
 		TextView address = (TextView) view.findViewById(R.id.customer_address);
-		TextView distance = (TextView) view.findViewById(R.id.distance_to_customer);
 		
 		name.setText(list.get(position).getName());
 		address.setText(list.get(position).getFullAddress());

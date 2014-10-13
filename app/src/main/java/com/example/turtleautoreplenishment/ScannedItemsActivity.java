@@ -24,6 +24,7 @@ import android.widget.Toast;
 public class ScannedItemsActivity extends FragmentActivity implements HttpDataDelegate
 {
 	private ArrayList<ScannedItem> scannedItems;
+    private int companyID;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -32,6 +33,7 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 		
 		Intent intent = getIntent(); 
 		scannedItems = intent.getParcelableArrayListExtra("scannedArray");
+        companyID = intent.getIntExtra("companyID", -1);
 		
 		setContentView(R.layout.activity_scanned_items);
 		
@@ -79,11 +81,19 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 				arrayItem.put("barcode", item.getBarcodeNumber());
 				arrayItem.put("replenishment_type", item.getReplenishmentType());
 				arrayItem.put("quantity", item.getQuantity());
+                //TODO add information from application
+                arrayItem.put("cust_part_no","");
+                arrayItem.put("desc_one","");
+                arrayItem.put("desc_two","");
 				
 				scannedItemsArray.put(arrayItem);
 			}
-			
+
+            request.put("customer_number",companyID);
+            request.put("ship_to","1234"); //TODO
+            request.put("user", AuthenticatedUser.getUser().getUserName());
 			request.put("item_list", scannedItemsArray);
+
 		}catch(JSONException e)
 		{
 			Log.i("JsonException: ", e.getMessage());

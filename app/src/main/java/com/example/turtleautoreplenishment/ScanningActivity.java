@@ -11,6 +11,7 @@ import com.example.turtleautoreplenishment.barcodescanner.IntentIntegrator;
 import com.example.turtleautoreplenishment.barcodescanner.IntentResult;
 import com.example.turtleautoreplenishment.webservices.HttpClient;
 import com.example.turtleautoreplenishment.webservices.HttpDataDelegate;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -113,6 +114,8 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 
 		barCode = "";
 		foundProduct = false;
+
+        //setupSlidingMenu();
 
 		handleScan(scanButton);
 	}
@@ -325,6 +328,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
             try {
                 String barcode = returnJson.getString("barcode");
                 autoFragment.setProductFound(barCode, "","","");
+                manualFragment.setProductFound(barcode,"","","");
                 foundProduct = true;
             } catch (JSONException e) {
                 Log.e("JSON Error: ", "Barcode not found");
@@ -336,6 +340,15 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
             manualFragment.setProductNotFound();
             foundProduct = false;
         }
+    }
+
+    private void setupSlidingMenu()
+    {
+        SlidingMenu menu = new SlidingMenu(this);
+        menu.setMode(SlidingMenu.LEFT);
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        menu.setFadeDegree(0.35f);
+        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
     }
 	
 }

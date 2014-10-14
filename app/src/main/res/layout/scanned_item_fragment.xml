@@ -67,4 +67,13 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="40dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Packages"
+        android:id="@+id/stocking_unit_desc"
+        android:layout_below="@+id/number_to_order"
+        android:layout_alignStart="@+id/number_to_order" />
+
 </RelativeLayout>

@@ -17,7 +17,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:text="Scan Next" />
+        android:text="Save and Scan Next" />
 
     <Button
         android:id="@+id/button_view_scanned"

@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import com.example.turtleautoreplenishment.webservices.HttpClient;
 import com.example.turtleautoreplenishment.webservices.HttpDataDelegate;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -169,7 +170,6 @@ public class MainActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 		return false;
 	}
-
 	
 	
 }

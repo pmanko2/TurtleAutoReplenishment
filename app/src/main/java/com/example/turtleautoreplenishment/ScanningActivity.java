@@ -132,8 +132,11 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 			String replenishType = (isAuto) ? "Auto" : "Manual";
             ReplenishmentFragment currentFragment = (isAuto) ? pagerAdapter.getRegisteredFragment(0) : pagerAdapter.getRegisteredFragment(1);
 
-			ScannedItem item = new ScannedItem(currentFragment.getProductNumber(), replenishType,
+			ScannedItem item = new ScannedItem(currentFragment.getTurtleProductNumber(),
+                    currentFragment.getCustomerProductNumber(), replenishType,
+                    currentFragment.getDescOne(), currentFragment.getDescTwo(),
 					currentFragment.getItemQuantity());
+
 			itemList.add(item);
 		}
 		
@@ -151,11 +154,12 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
         // scanning returns barcode - query db if barcode found otherwise indicate not found
 		if(barCode != null)
 		{
-			String finalBarCode = convertBarCodeToCorrectFormat(barCode);
+			barCode = convertBarCodeToCorrectFormat(barCode);
 			
 			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("tag", "barcode_info"));
-			params.add(new BasicNameValuePair("bar_code", finalBarCode));
+            //TODO change this is only for testing
+			params.add(new BasicNameValuePair("bar_code", "09264431672"));
 			
 			HttpClient.getInstance().getJsonInBackground("POST", this, params);
 		}
@@ -220,7 +224,9 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 
                     // TODO null check for fragments
                     // TODO better memory management for reports/items recently scanned
-                    ScannedItem item = new ScannedItem(currentFragment.getProductNumber(), replenishType,
+                    ScannedItem item = new ScannedItem(currentFragment.getTurtleProductNumber(),
+                            currentFragment.getCustomerProductNumber(), replenishType,
+                            currentFragment.getDescOne(), currentFragment.getDescTwo(),
                             currentFragment.getItemQuantity());
                     itemList.add(item);
 
@@ -269,12 +275,19 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 				{
                     // if product is found, show information on screen
 					//String customerId = returnJson.getString("customer_id");
-					String id = returnJson.getString("id");
+					String turtleID = returnJson.getString("id");
 					String customerProductId = returnJson.getString("cust_product_id");
 					String description = returnJson.getString("description");
+                    String secondDescription = returnJson.getString("description_2");
+                    String min = returnJson.getString("min");
+                    String max = returnJson.getString("max");
+                    String bin = returnJson.getString("bin");
+                    String thirdDescription = returnJson.getString("description_3");
 
-                    autoFragment.setProductFound(barCode, description, id, customerProductId);
-                    manualFragment.setProductFound(barCode, description, id, customerProductId);
+                    autoFragment.setProductFound(customerProductId, description, turtleID, min, max,
+                                                bin, secondDescription, thirdDescription);
+                    manualFragment.setProductFound(customerProductId, description, turtleID, min, max,
+                                                bin, secondDescription, thirdDescription);
 
 					foundProduct = true;
 				}
@@ -325,14 +338,10 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 
         if(add)
         {
-            try {
-                String barcode = returnJson.getString("barcode");
-                autoFragment.setProductFound(barCode, "","","");
-                manualFragment.setProductFound(barcode,"","","");
-                foundProduct = true;
-            } catch (JSONException e) {
-                Log.e("JSON Error: ", "Barcode not found");
-            }
+            //if user wants to order product anyway, display just barcode (prodID)
+            autoFragment.setProductFound(barCode, "","","","","","","");
+            manualFragment.setProductFound(barCode, "","","","","","","");
+            foundProduct = true;
         }
         else
         {

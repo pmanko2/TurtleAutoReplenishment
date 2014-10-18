@@ -78,13 +78,13 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 			{
 				JSONObject arrayItem = new JSONObject();
 				
-				arrayItem.put("barcode", item.getBarcodeNumber());
+				arrayItem.put("turtle_id", item.getTurtleProduct());
 				arrayItem.put("replenishment_type", item.getReplenishmentType());
 				arrayItem.put("quantity", item.getQuantity());
                 //TODO add information from application
-                arrayItem.put("cust_part_no","");
-                arrayItem.put("desc_one","");
-                arrayItem.put("desc_two","");
+                arrayItem.put("cust_part_no", item.getCustomerProduct());
+                arrayItem.put("desc_one", item.getDescOne());
+                arrayItem.put("desc_two", item.getDescTwo());
 				
 				scannedItemsArray.put(arrayItem);
 			}

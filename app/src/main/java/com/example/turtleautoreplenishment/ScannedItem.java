@@ -5,34 +5,42 @@ import android.os.Parcelable;
 
 public class ScannedItem implements Parcelable 
 {
-	private String barcodeNumber;
+	private String customerProduct;
+    private String turtleProduct;
 	private String replenishmentType;
+    private String descriptionOne;
+    private String descriptionTwo;
 	private int quantity;
 	
-	public ScannedItem(String number, String replenishment, int quantity)
+	public ScannedItem(String turtleProdID, String custProdID, String replenishment, String descOne,
+                       String descTwo, int quantity)
 	{
-		this.barcodeNumber = number;
+		this.customerProduct = custProdID;
+        this.turtleProduct = turtleProdID;
 		this.replenishmentType = replenishment;
+        this.descriptionOne = descOne;
+        this.descriptionTwo = descTwo;
 		this.quantity = quantity;
 	}
 	
 	public ScannedItem(Parcel in)
 	{
-		this.barcodeNumber = in.readString();
+		this.customerProduct = in.readString();
+        this.turtleProduct = in.readString();
 		this.replenishmentType = in.readString();
+        this.descriptionOne = in.readString();
+        this.descriptionTwo = in.readString();
 		this.quantity = in.readInt();
 	}
-	
-	public String getBarcodeNumber()
-	{
-		return this.barcodeNumber;
-	}
-	
+
+    public String getCustomerProduct() {return this.customerProduct;}
+	public String getTurtleProduct() {return this.turtleProduct;}
 	public String getReplenishmentType()
 	{
 		return this.replenishmentType;
 	}
-	
+	public String getDescOne() {return this.descriptionOne;}
+    public String getDescTwo() {return this.descriptionTwo;}
 	public int getQuantity()
 	{
 		return this.quantity;
@@ -47,8 +55,11 @@ public class ScannedItem implements Parcelable
 	@Override
 	public void writeToParcel(Parcel out, int flags) 
 	{
-		out.writeString(barcodeNumber);
+		out.writeString(customerProduct);
+        out.writeString(turtleProduct);
 		out.writeString(replenishmentType);
+        out.writeString(descriptionOne);
+        out.writeString(descriptionTwo);
 		out.writeInt(quantity);
 		
 	}

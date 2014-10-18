@@ -1,35 +1,54 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" >
-    
+    android:layout_marginTop="10dp">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="10dp">
+
+        <TextView
+            android:id="@+id/order_turtle_id"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="KLN 17824"/>
+
+        <TextView
+            android:id="@+id/order_customer_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="992817718"/>
+
+        <TextView
+            android:id="@+id/replenishment_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="manual"/>
+    </LinearLayout>
+
     <TextView
-        android:id="@+id/scanned_item_number"
+        android:id="@+id/order_item_quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="992817718"/>
-    
-    <TextView 
-        android:id="@+id/scanned_item_quantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="56"/>
-    
-    <TextView 
-        android:id="@+id/replenishment_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="manual"/>
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="50"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <ImageButton
+        android:id="@+id/edit_item_button"
         android:layout_width="wrap_content"
         android:layout_height="26dp"
-        android:id="@+id/edit_item_button"
         android:background="#0000"
         android:src="@drawable/ic_drawer"
-        android:layout_weight="0.52" />
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"/>
 
-</LinearLayout>
+</RelativeLayout>

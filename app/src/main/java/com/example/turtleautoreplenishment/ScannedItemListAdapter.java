@@ -40,11 +40,13 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem>
 		}
 		
 		// set scanned item textview information
-		TextView number = (TextView) view.findViewById(R.id.scanned_item_number);
-		TextView quantity = (TextView) view.findViewById(R.id.scanned_item_quantity);
+		TextView turtleID = (TextView) view.findViewById(R.id.order_turtle_id);
+        TextView customerID = (TextView) view.findViewById(R.id.order_customer_id);
+		TextView quantity = (TextView) view.findViewById(R.id.order_item_quantity);
 		TextView type = (TextView) view.findViewById(R.id.replenishment_type);
 		
-		number.setText(list.get(position).getBarcodeNumber());
+		turtleID.setText(list.get(position).getTurtleProduct());
+        customerID.setText(list.get(position).getCustomerProduct());
 		quantity.setText(String.valueOf(list.get(position).getQuantity()));
 		type.setText(list.get(position).getReplenishmentType());
 		

@@ -35,11 +35,14 @@ public class ReplenishmentFragment extends Fragment
     private TextView productNumber;
     private NumberPicker itemQuantity;
     private RelativeLayout promptLayout;
-    private LinearLayout descriptionLayout;
     private TextView productDescription;
     private TextView productTurtleId;
-    private TextView productCustomerId;
+    private TextView productSecondDescription;
     private String barCode;
+    private TextView minText;
+    private TextView maxText;
+    private TextView binText;
+    private TextView productThirdDescription;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,9 +66,12 @@ public class ReplenishmentFragment extends Fragment
         quantityPrompt = (TextView) fragmentView.findViewById(R.id.quantity_prompt);
         productNumber = (TextView) fragmentView.findViewById(R.id.product_number);
         productDescription = (TextView) fragmentView.findViewById(R.id.product_description);
+        productSecondDescription = (TextView) fragmentView.findViewById(R.id.product_second_description);
+        productThirdDescription = (TextView) fragmentView.findViewById(R.id.product_third_description);
         productTurtleId = (TextView) fragmentView.findViewById(R.id.product_turtle_id);
-        productCustomerId = (TextView) fragmentView.findViewById(R.id.product_customer_id);
-        descriptionLayout = (LinearLayout) fragmentView.findViewById(R.id.product_info_layout);
+        minText = (TextView) fragmentView.findViewById(R.id.minimum);
+        maxText = (TextView) fragmentView.findViewById(R.id.maximum);
+        binText = (TextView) fragmentView.findViewById(R.id.bin);
 
         itemQuantity.setMinValue(0);
         itemQuantity.setMaxValue(10000);
@@ -77,21 +83,32 @@ public class ReplenishmentFragment extends Fragment
         productNumber.setText("");
         productDescription.setText("");
         productTurtleId.setText("");
-        productCustomerId.setText("");
         quantityPrompt.setText("");
+        productSecondDescription.setText("");
+        productThirdDescription.setText("");
+        minText.setText("");
+        maxText.setText("");
+        binText.setText("");
 
 
         return fragmentView;
     }
 
-    public void setProductFound(String pNumber, String pDescription, String turtleID, String custID)
+    public void setProductFound(String pNumber, String pDescription, String turtleID, String min,
+                                    String max, String bin, String secondDescription, String thirdDescription)
     {
 
         itemQuantity.setVisibility(View.VISIBLE);
         productNumber.setText(pNumber);
         productDescription.setText(pDescription);
         productTurtleId.setText(turtleID);
-        productCustomerId.setText(custID);
+        productSecondDescription.setText(secondDescription);
+        productThirdDescription.setText(thirdDescription);
+
+        minText.setText("Min: " + min);
+        maxText.setText("Max: " + max);
+        binText.setText("Bin: " + bin);
+
 
         if(fragmentNumber == 0)
             quantityPrompt.setText("Enter quantity on shelf:");
@@ -105,8 +122,12 @@ public class ReplenishmentFragment extends Fragment
         productNumber.setText("Product Not Found");
         productDescription.setText("");
         productTurtleId.setText("");
-        productCustomerId.setText("");
         quantityPrompt.setText("");
+        productSecondDescription.setText("");
+        minText.setText("");
+        maxText.setText("");
+        binText.setText("");
+        productThirdDescription.setText("");
     }
 
     public void clearProductInfo()
@@ -115,15 +136,24 @@ public class ReplenishmentFragment extends Fragment
         productNumber.setText("");
         productDescription.setText("");
         productTurtleId.setText("");
-        productCustomerId.setText("");
         quantityPrompt.setText("");
+        productSecondDescription.setText("");
+        minText.setText("");
+        maxText.setText("");
+        binText.setText("");
+        productThirdDescription.setText("");
     }
 
-    public String getProductNumber()
+    public String getTurtleProductNumber()
     {
-        return productNumber.getText().toString();
+        return productTurtleId.getText().toString();
     }
-
+    public String getCustomerProductNumber() {return productNumber.getText().toString();}
+    public String getDescOne()
+    {
+        return productDescription.getText().toString();
+    }
+    public String getDescTwo() {return productSecondDescription.getText().toString();}
     public int getItemQuantity()
     {
         return itemQuantity.getValue();

@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/change_minmax_setting"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom|collapseActionView"
+        android:icon="@drawable/ic_action_overflow"
+        android:title="@string/menu_minmax"/>
+
+</menu>

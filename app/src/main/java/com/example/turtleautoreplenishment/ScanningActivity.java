@@ -23,6 +23,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -91,7 +93,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
         Intent intent = getIntent();
         String companyName = intent.getStringExtra("companyName");
         companyID = intent.getIntExtra("companyNumber",0);
-        setTitle("Scanning for " + companyName);
+        setTitle(companyName);
 
         Button scanButton = (Button) findViewById(R.id.button_scan);
         Button viewScanned = (Button) findViewById(R.id.button_view_scanned);
@@ -119,6 +121,13 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 
 		handleScan(scanButton);
 	}
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.scanning_menu, menu);
+        return true;
+    }
 	
 	protected void saveCurrentItem()
 	{

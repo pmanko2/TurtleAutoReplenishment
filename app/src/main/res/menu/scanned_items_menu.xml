@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/edit_scanned_item"
+        android:showAsAction="ifRoom|collapseActionView"
+        android:icon="@drawable/ic_action_edit"
+        android:title="@string/discard_scanned_item"/>
+
+    <item
+        android:id="@+id/discard_scanned_items"
+        android:showAsAction="ifRoom|collapseActionView"
+        android:icon="@drawable/ic_action_discard"
+        android:title="@string/discard_scanned_item"/>
+
+</menu>

@@ -15,8 +15,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -37,10 +43,92 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 		
 		setContentView(R.layout.activity_scanned_items);
 		
-		ListView scannedList = (ListView) findViewById(R.id.scanned_items_view);
-		ScannedItemListAdapter adapter = new ScannedItemListAdapter(this, R.layout.scanned_item_item, scannedItems);
+		final ListView scannedList = (ListView) findViewById(R.id.scanned_items_view);
+		final ScannedItemListAdapter adapter = new ScannedItemListAdapter(this, R.layout.scanned_item_item, scannedItems);
 		
 		scannedList.setAdapter(adapter);
+
+        // set up contexual menu for
+        scannedList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        scannedList.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener(){
+
+            int numChecked = 0;
+
+            @Override
+            public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean checked)
+            {
+                if(checked)
+                {
+                    numChecked++;
+                    adapter.setNewSelection(position,checked);
+                }
+                else
+                {
+                    numChecked--;
+                    adapter.removeSelection(position);
+                }
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+                //inflate menu defined in scanned_items_menu in action bar
+                MenuInflater inflater = actionMode.getMenuInflater();
+                inflater.inflate(R.menu.scanned_items_menu, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem)
+            {
+                numChecked = 0;
+
+                // handle action clicks (delete items or edit item)
+                switch(menuItem.getItemId())
+                {
+                    case R.id.discard_scanned_items:
+                        deleteItems();
+                        actionMode.finish();
+                        return true;
+                    case R.id.edit_scanned_item:
+                        editItem();
+                        actionMode.finish();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode actionMode)
+            {
+                numChecked = 0;
+                adapter.clearSelection();
+            }
+
+            private void deleteItems()
+            {
+
+            }
+
+            private void editItem()
+            {
+
+            }
+        });
+
+        scannedList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+                scannedList.setItemChecked(position, !adapter.isPositionSelected(position));
+                return false;
+            }
+        });
 		
 		Button sendReport = (Button) findViewById(R.id.send_scanned_items_button);
 		

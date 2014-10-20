@@ -128,20 +128,24 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
-        public static final int ic_action_edit=0x7f020000;
-        public static final int ic_drawer=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int location_icon=0x7f020003;
+        public static final int ic_action_discard=0x7f020000;
+        public static final int ic_action_edit=0x7f020001;
+        public static final int ic_action_overflow=0x7f020002;
+        public static final int ic_drawer=0x7f020003;
+        public static final int ic_launcher=0x7f020004;
+        public static final int location_icon=0x7f020005;
     }
     public static final class id {
-        public static final int action_settings=0x7f040029;
         public static final int bin=0x7f040022;
         public static final int button_scan=0x7f04000b;
         public static final int button_view_scanned=0x7f04000c;
+        public static final int change_minmax_setting=0x7f04002c;
+        public static final int checkBox=0x7f040028;
         public static final int container=0x7f040006;
         public static final int customer_address=0x7f04000e;
         public static final int customer_name=0x7f04000d;
-        public static final int edit_item_button=0x7f040027;
+        public static final int discard_scanned_items=0x7f04002b;
+        public static final int edit_scanned_item=0x7f04002a;
         public static final int fullscreen=0x7f040003;
         public static final int item_desc_scroll=0x7f040015;
         public static final int left=0x7f040000;
@@ -152,9 +156,9 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int minimum=0x7f040020;
         public static final int none=0x7f040004;
         public static final int number_to_order=0x7f04001e;
-        public static final int order_customer_id=0x7f040024;
-        public static final int order_item_quantity=0x7f040026;
-        public static final int order_turtle_id=0x7f040023;
+        public static final int order_customer_id=0x7f040025;
+        public static final int order_item_quantity=0x7f040027;
+        public static final int order_turtle_id=0x7f040024;
         public static final int password_input=0x7f040012;
         public static final int password_prompt=0x7f040011;
         public static final int product_description=0x7f04001a;
@@ -167,12 +171,13 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int quantity_pick_layout=0x7f040016;
         public static final int quantity_prompt=0x7f04001d;
         public static final int replenishment_pager=0x7f04000a;
-        public static final int replenishment_type=0x7f040025;
+        public static final int replenishment_type=0x7f040026;
         public static final int right=0x7f040001;
+        public static final int scanned_item_layout=0x7f040023;
         public static final int scanned_items_view=0x7f040009;
         public static final int selected_view=0x7f040005;
         public static final int send_scanned_items_button=0x7f040008;
-        public static final int slidingmenumain=0x7f040028;
+        public static final int slidingmenumain=0x7f040029;
         public static final int submit_layout=0x7f040013;
         public static final int username_input=0x7f040010;
         public static final int username_prompt=0x7f04000f;
@@ -188,14 +193,16 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int slidingmenumain=0x7f030007;
     }
     public static final class menu {
-        public static final int main=0x7f080000;
+        public static final int scanned_items_menu=0x7f080000;
+        public static final int scanning_menu=0x7f080001;
     }
     public static final class string {
-        public static final int action_settings=0x7f060000;
-        public static final int app_name=0x7f060001;
-        public static final int title_section1=0x7f060002;
-        public static final int title_section2=0x7f060003;
-        public static final int title_section3=0x7f060004;
+        public static final int app_name=0x7f060000;
+        public static final int discard_scanned_item=0x7f060001;
+        public static final int menu_minmax=0x7f060002;
+        public static final int title_section1=0x7f060003;
+        public static final int title_section2=0x7f060004;
+        public static final int title_section3=0x7f060005;
     }
     public static final class style {
         /** 

@@ -56,10 +56,13 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
+        // listener for the tab view of scanning activity
         ActionBar.TabListener tabListener = new ActionBar.TabListener(){
+
 
             @Override
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+                // set tab as current if user selects it
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
@@ -74,6 +77,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
             }
         };
 
+        // add manual and auto tabs to aciton bar
         actionBar.addTab(actionBar.newTab().setText("Auto").setTabListener(tabListener));
         actionBar.addTab(actionBar.newTab().setText("Manual").setTabListener(tabListener));
 
@@ -88,7 +92,8 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
                 }
         );
 
-        itemList = new ArrayList<ScannedItem>();
+        itemList = new ArrayList<ScannedItem>(); // this holds all scanned items--might change to db
+                                                 // implementation
         currentActivity = this;
         Intent intent = getIntent();
         String companyName = intent.getStringExtra("companyName");
@@ -98,6 +103,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
         Button scanButton = (Button) findViewById(R.id.button_scan);
         Button viewScanned = (Button) findViewById(R.id.button_view_scanned);
 
+        // start
         viewScanned.setOnClickListener(new OnClickListener(){
 
             @Override

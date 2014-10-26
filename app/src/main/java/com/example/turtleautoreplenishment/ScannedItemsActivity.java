@@ -50,23 +50,22 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 
         // set up contexual menu for
         scannedList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        scannedList.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener(){
-
+        scannedList.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener()
+        {
             int numChecked = 0;
 
             @Override
             public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean checked)
             {
+                Log.i("Contexual menu: ", "Checked state has been changed" + " position: " + position + " checked " + checked);
+                adapter.indicateChecked(position, checked);
+
                 if(checked)
-                {
                     numChecked++;
-                    adapter.setNewSelection(position,checked);
-                }
                 else
-                {
                     numChecked--;
-                    adapter.removeSelection(position);
-                }
+
+                actionMode.invalidate();
             }
 
             @Override
@@ -74,19 +73,29 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
                 //inflate menu defined in scanned_items_menu in action bar
                 MenuInflater inflater = actionMode.getMenuInflater();
                 inflater.inflate(R.menu.scanned_items_menu, menu);
+
                 return true;
             }
 
             @Override
-            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-                return false;
+            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu)
+            {
+                MenuItem edit = menu.getItem(0);
+
+                if(numChecked != 1) {
+                    edit.setVisible(false);
+                }
+                else
+                {
+                    edit.setVisible(true);
+                }
+
+                return true;
             }
 
             @Override
             public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem)
             {
-                numChecked = 0;
-
                 // handle action clicks (delete items or edit item)
                 switch(menuItem.getItemId())
                 {
@@ -106,18 +115,16 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
             @Override
             public void onDestroyActionMode(ActionMode actionMode)
             {
-                numChecked = 0;
-                adapter.clearSelection();
+                adapter.resetSelected();
             }
 
             private void deleteItems()
             {
-
+                adapter.deleteSelected();
             }
 
             private void editItem()
             {
-
             }
         });
 
@@ -125,7 +132,9 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
-                scannedList.setItemChecked(position, !adapter.isPositionSelected(position));
+
+                Log.i("Long Click Listener: ", "Long click listener called");
+                //scannedList.setItemChecked(position, !adapter.isPositionSelected(position));
                 return false;
             }
         });
@@ -169,7 +178,6 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 				arrayItem.put("turtle_id", item.getTurtleProduct());
 				arrayItem.put("replenishment_type", item.getReplenishmentType());
 				arrayItem.put("quantity", item.getQuantity());
-                //TODO add information from application
                 arrayItem.put("cust_part_no", item.getCustomerProduct());
                 arrayItem.put("desc_one", item.getDescOne());
                 arrayItem.put("desc_two", item.getDescTwo());

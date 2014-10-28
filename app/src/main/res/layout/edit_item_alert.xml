@@ -15,7 +15,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Max"
             android:id="@+id/edit_max_text"
-            android:layout_marginLeft="19dp"
+            android:layout_marginStart="20dp"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true" />
 
@@ -25,10 +25,10 @@
             android:inputType="number"
             android:ems="5"
             android:id="@+id/edit_max"
-            android:text="5"
             android:gravity="center_horizontal"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -43,7 +43,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Min"
             android:id="@+id/edit_min_text"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true" />
 
@@ -55,7 +55,8 @@
             android:id="@+id/edit_min"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal"
+            android:layout_marginEnd="20dp"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -71,7 +72,7 @@
             android:text="Qty"
             android:id="@+id/edit_quantity_text"
             android:gravity="center_horizontal"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true" />
 
@@ -83,8 +84,41 @@
             android:id="@+id/edit_quantity"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal"
+            android:layout_marginEnd="20dp"/>
     </RelativeLayout>
+
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+            <!--android:text="Type"-->
+            <!--android:id="@+id/textView"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_alignParentStart="true" />-->
+
+        <!--<Button-->
+            <!--style="?android:attr/buttonStyleSmall"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Manual"-->
+            <!--android:id="@+id/button"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_alignParentEnd="true" />-->
+
+        <!--<Button-->
+            <!--style="?android:attr/buttonStyleSmall"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Auto"-->
+            <!--android:id="@+id/button2"-->
+            <!--android:layout_toStartOf="@+id/button"-->
+            <!--android:layout_alignParentTop="true" />-->
+    <!--</RelativeLayout>-->
 
 
     <Switch
@@ -95,6 +129,8 @@
         android:textOff="Auto"
         android:id="@+id/type_switch"
         android:checked="false"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="normal" />
 
 </LinearLayout>

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Pawel on 9/16/2014.
+ * Fragment represents either an auto or manual replenishment screen in application
  */
 public class ReplenishmentFragment extends Fragment
 {
@@ -158,5 +159,8 @@ public class ReplenishmentFragment extends Fragment
     {
         return itemQuantity.getValue();
     }
+    public String getItemMax(){return maxText.getText().toString();}
+    public String getItemMin(){return minText.getText().toString();}
+    public String getBin(){return binText.getText().toString();}
 }
 

@@ -150,7 +150,8 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 			ScannedItem item = new ScannedItem(currentFragment.getTurtleProductNumber(),
                     currentFragment.getCustomerProductNumber(), replenishType,
                     currentFragment.getDescOne(), currentFragment.getDescTwo(),
-					currentFragment.getItemQuantity());
+					currentFragment.getItemQuantity(), currentFragment.getItemMax(),
+                    currentFragment.getItemMin(), currentFragment.getBin());
 
 			itemList.add(item);
 		}
@@ -242,7 +243,8 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
                     ScannedItem item = new ScannedItem(currentFragment.getTurtleProductNumber(),
                             currentFragment.getCustomerProductNumber(), replenishType,
                             currentFragment.getDescOne(), currentFragment.getDescTwo(),
-                            currentFragment.getItemQuantity());
+                            currentFragment.getItemQuantity(), currentFragment.getItemMax(),
+                            currentFragment.getItemMin(), currentFragment.getBin());
                     itemList.add(item);
 
                     autoFragment.clearProductInfo();

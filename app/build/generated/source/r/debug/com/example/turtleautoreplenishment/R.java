@@ -163,7 +163,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int none=0x7f040004;
         public static final int number_to_order=0x7f040025;
         public static final int order_customer_id=0x7f04002c;
-        public static final int order_item_quantity=0x7f04002e;
+        public static final int order_item_quantity=0x7f04002d;
         public static final int order_turtle_id=0x7f04002b;
         public static final int password_input=0x7f040019;
         public static final int password_prompt=0x7f040018;
@@ -177,7 +177,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int quantity_pick_layout=0x7f04001d;
         public static final int quantity_prompt=0x7f040024;
         public static final int replenishment_pager=0x7f04000a;
-        public static final int replenishment_type=0x7f04002d;
+        public static final int replenishment_type=0x7f04002e;
         public static final int right=0x7f040001;
         public static final int scanned_item_layout=0x7f04002a;
         public static final int scanned_items_view=0x7f040009;

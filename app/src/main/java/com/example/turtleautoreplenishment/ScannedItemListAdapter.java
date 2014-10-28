@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Checkable;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,9 +69,9 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
         quantity.setText(String.valueOf(list.get(position).getQuantity()));
         type.setText(list.get(position).getReplenishmentType());
 
-        Integer curPosition = new Integer(position);
+        Integer curPosition = position;
 
-        if (selected.containsKey(curPosition) && selected.get(curPosition) == true)
+        if (selected.containsKey(position) && selected.get(curPosition))
         {
             Log.i("Color change: ", "Highlighted");
             view.setBackgroundColor(Color.parseColor("#ff33b5e5"));
@@ -86,7 +88,7 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
     public void indicateChecked(int position, boolean checked)
     {
         Log.i("Indicating Checked: ", "Position: " + position + " " + checked);
-        selected.put(new Integer(position), checked);
+        selected.put(position, checked);
         notifyDataSetChanged();
     }
 
@@ -111,7 +113,7 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
     {
         for(Integer toEdit : selected.keySet())
         {
-            showEditItemDialog(toEdit.intValue());
+            showEditItemDialog(toEdit);
         }
     }
 
@@ -154,9 +156,29 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Edit Item");
 
+        // set view of alert dialog to custom edit item alert view
         LayoutInflater inflater = LayoutInflater.from(context);
+        final View editDialog = inflater.inflate(R.layout.edit_item_alert, null);
+        builder.setView(editDialog);
 
-        builder.setView(inflater.inflate(R.layout.edit_item_alert, null));
+        // set edittexts to values that are assigned to current item being edited
+        final EditText maxEdit = (EditText) editDialog.findViewById(R.id.edit_max);
+        final EditText minEdit = (EditText) editDialog.findViewById(R.id.edit_min);
+        final EditText qtyEdit = (EditText) editDialog.findViewById(R.id.edit_quantity);
+        final Switch repSwitch = (Switch) editDialog.findViewById(R.id.type_switch);
+
+        ScannedItem item = list.get(itemToEdit);
+
+        maxEdit.setText(item.getMax());
+        minEdit.setText(item.getMin());
+        qtyEdit.setText("" + item.getQuantity());
+
+        // on = manual, off = auto
+        repSwitch.setTextOn("Manual");
+        repSwitch.setTextOff("Auto");
+
+        boolean on = (item.getReplenishmentType().equals("Manual"));
+        repSwitch.setChecked(on);
 
         // if user goes ahead with edit, send request for edit to server. wait for confirmation
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener(){
@@ -174,8 +196,9 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
 
                 //TODO quantity has to be handled differently
                 ScannedItem toEdit = list.get(itemToEdit);
-                toEdit.setQuantity(17);
+                toEdit.setQuantity(Integer.parseInt(qtyEdit.getText().toString()));
                 toEdit.setReplenishmentType("Manual");
+                notifyDataSetChanged();
             }
         });
 
@@ -184,12 +207,14 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
 
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                return;
             }
         });
 
-        builder.create().show();
+        AlertDialog dialog = builder.create();
+        //setupEditDialogValues(itemToEdit, dialog);
+        dialog.show();
 
 
     }
+
 }

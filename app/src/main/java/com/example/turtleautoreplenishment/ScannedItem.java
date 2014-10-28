@@ -11,9 +11,12 @@ public class ScannedItem implements Parcelable
     private String descriptionOne;
     private String descriptionTwo;
 	private int quantity;
+    private String max;
+    private String min;
+    private String binNumber;
 	
 	public ScannedItem(String turtleProdID, String custProdID, String replenishment, String descOne,
-                       String descTwo, int quantity)
+                       String descTwo, int quantity, String max, String min, String binNumber)
 	{
 		this.customerProduct = custProdID;
         this.turtleProduct = turtleProdID;
@@ -21,6 +24,9 @@ public class ScannedItem implements Parcelable
         this.descriptionOne = descOne;
         this.descriptionTwo = descTwo;
 		this.quantity = quantity;
+        this.max = max.substring(5);    //character 5 is where the max # starts in Max: 1
+        this.min = min.substring(5);
+        this.binNumber = binNumber.substring(5);
 	}
 	
 	public ScannedItem(Parcel in)
@@ -31,6 +37,9 @@ public class ScannedItem implements Parcelable
         this.descriptionOne = in.readString();
         this.descriptionTwo = in.readString();
 		this.quantity = in.readInt();
+        this.max = in.readString();
+        this.min = in.readString();
+        this.binNumber = in.readString();
 	}
 
     public String getCustomerProduct() {return this.customerProduct;}
@@ -45,6 +54,9 @@ public class ScannedItem implements Parcelable
 	{
 		return this.quantity;
 	}
+    public String getMin(){return this.min;}
+    public String getMax(){return this.max;}
+    public String getBinNumber(){return this.binNumber;}
 
     public void setQuantity(int newQuantity)
     {
@@ -71,7 +83,9 @@ public class ScannedItem implements Parcelable
         out.writeString(descriptionOne);
         out.writeString(descriptionTwo);
 		out.writeInt(quantity);
-		
+        out.writeString(max);
+        out.writeString(min);
+        out.writeString(binNumber);
 	}
 	
 	public static final Parcelable.Creator<ScannedItem> CREATOR = new Parcelable.Creator<ScannedItem>() {

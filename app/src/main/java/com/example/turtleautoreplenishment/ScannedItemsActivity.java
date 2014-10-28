@@ -48,7 +48,7 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 		
 		scannedList.setAdapter(adapter);
 
-        // set up contexual menu for
+        // set up contexual menu
         scannedList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         scannedList.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener()
         {
@@ -60,6 +60,7 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
                 Log.i("Contexual menu: ", "Checked state has been changed" + " position: " + position + " checked " + checked);
                 adapter.indicateChecked(position, checked);
 
+                // keep track of num checked items -- only show edit button if one item checked
                 if(checked)
                     numChecked++;
                 else
@@ -73,7 +74,6 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
                 //inflate menu defined in scanned_items_menu in action bar
                 MenuInflater inflater = actionMode.getMenuInflater();
                 inflater.inflate(R.menu.scanned_items_menu, menu);
-
                 return true;
             }
 
@@ -116,6 +116,7 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
             public void onDestroyActionMode(ActionMode actionMode)
             {
                 adapter.resetSelected();
+                numChecked = 0;
             }
 
             private void deleteItems()
@@ -125,6 +126,7 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 
             private void editItem()
             {
+                adapter.editSelected();
             }
         });
 

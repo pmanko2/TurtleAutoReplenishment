@@ -46,6 +46,16 @@ public class ScannedItem implements Parcelable
 		return this.quantity;
 	}
 
+    public void setQuantity(int newQuantity)
+    {
+        this.quantity = newQuantity;
+    }
+
+    public void setReplenishmentType(String newRepType)
+    {
+        this.replenishmentType = newRepType;
+    }
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -69,14 +79,12 @@ public class ScannedItem implements Parcelable
 		@Override
 		public ScannedItem createFromParcel(Parcel source) 
 		{
-			// TODO Auto-generated method stub
 			return new ScannedItem(source);
 		}
 
 		@Override
 		public ScannedItem[] newArray(int size) 
 		{
-			// TODO Auto-generated method stub
 			return new ScannedItem[size];
 		}
 	};

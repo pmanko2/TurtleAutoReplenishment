@@ -28,12 +28,6 @@
             android:layout_weight="1"
             android:text="992817718"/>
 
-        <TextView
-            android:id="@+id/replenishment_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="manual"/>
     </LinearLayout>
 
     <TextView
@@ -44,5 +38,15 @@
         android:text="50"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/replenishment_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="manual"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="25dp" />
 
 </RelativeLayout>

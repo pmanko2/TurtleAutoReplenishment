@@ -103,7 +103,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
         Button scanButton = (Button) findViewById(R.id.button_scan);
         Button viewScanned = (Button) findViewById(R.id.button_view_scanned);
 
-        // start
+        // start activity that deals with all teh scanned items
         viewScanned.setOnClickListener(new OnClickListener(){
 
             @Override

@@ -24,6 +24,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.turtleautoreplenishment.databaseservices.ScannedItemDataSource;
 import com.example.turtleautoreplenishment.webservices.HttpClient;
 import com.example.turtleautoreplenishment.webservices.HttpDataDelegate;
 
@@ -34,22 +35,25 @@ import org.json.JSONObject;
 
 public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements HttpDataDelegate
 {
-	private ArrayList<ScannedItem> list;
+	//private ArrayList<ScannedItem> list;
 	private int resourceID;
 	private Context context;
     private ArrayList<ScannedItem> toDelete;
     private HashMap<Integer, Boolean> selected = new HashMap<Integer, Boolean>();
     private boolean isAuto;
+    private ScannedItemDataSource dataSource;
 	
-	public ScannedItemListAdapter(Context context, int resource, ArrayList<ScannedItem> itemList) 
+	public ScannedItemListAdapter(Context context, int resource,
+                                    ScannedItemDataSource source)
 	{
-		super(context, resource, itemList);
-		this.list = itemList;
+		super(context, resource, source.getAllItems());
+		//this.list = source.getAllItems();
 		this.resourceID = resource;
 		this.context = context;
         toDelete = new ArrayList<ScannedItem>();
         isAuto = false;
-	}
+        this.dataSource = source;
+    }
 	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
@@ -61,6 +65,8 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
         } else {
             view = (ViewGroup) convertView;
         }
+
+        ArrayList<ScannedItem> list = dataSource.getAllItems();
 
         // set scanned item textview information
         TextView turtleID = (TextView) view.findViewById(R.id.order_turtle_id);
@@ -77,9 +83,9 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
         max.setText("Max: " + list.get(position).getMax());
         min.setText("Min: " + list.get(position).getMin());
 
-        Integer curPosition = position;
+        Integer key = list.get(position).getSqLiteID();
 
-        if (selected.containsKey(position) && selected.get(curPosition))
+        if (selected.containsKey(key) && selected.get(key))
         {
             Log.i("Color change: ", "Highlighted");
             view.setBackgroundColor(Color.parseColor("#ff33b5e5"));
@@ -93,10 +99,10 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
 		return view;
 	}
 
-    public void indicateChecked(int position, boolean checked)
+    public void indicateChecked(int id, boolean checked)
     {
-        Log.i("Indicating Checked: ", "Position: " + position + " " + checked);
-        selected.put(position, checked);
+        Log.i("Indicating Checked: ", "Position: " + id + " " + checked);
+        selected.put(id, checked);
         notifyDataSetChanged();
     }
 
@@ -111,7 +117,8 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
     {
         for(Integer toDelete : selected.keySet())
         {
-            list.remove(toDelete.intValue());
+            ScannedItem delete = dataSource.getScannedItemByID(toDelete);
+            dataSource.deleteScannedItem(delete);
         }
 
         notifyDataSetChanged();
@@ -119,9 +126,9 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
 
     public void editSelected()
     {
-        for(Integer toEdit : selected.keySet())
+        for(Integer keyToEdit : selected.keySet())
         {
-            showEditItemDialog(toEdit);
+            showEditItemDialog(dataSource.getScannedItemByID(keyToEdit));
         }
     }
 
@@ -159,7 +166,7 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
 
     }
 
-    private void showEditItemDialog(final int itemToEdit)
+    private void showEditItemDialog(final ScannedItem item)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Edit Item");
@@ -175,8 +182,6 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
         final EditText qtyEdit = (EditText) editDialog.findViewById(R.id.edit_quantity);
         final Button auto = (Button) editDialog.findViewById(R.id.auto_button);
         final Button manual = (Button) editDialog.findViewById(R.id.manual_button);
-
-        final ScannedItem item = list.get(itemToEdit);
 
         maxEdit.setText(item.getMax());
         minEdit.setText(item.getMin());
@@ -206,6 +211,8 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
 
                 String replenishmentType = (isAuto) ? "Auto" : "Manual";
                 item.setReplenishmentType(replenishmentType);
+
+                dataSource.updateItem(item);
 
                 notifyDataSetChanged();
 

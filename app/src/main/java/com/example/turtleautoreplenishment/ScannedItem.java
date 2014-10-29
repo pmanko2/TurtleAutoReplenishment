@@ -14,10 +14,12 @@ public class ScannedItem implements Parcelable
     private String max;
     private String min;
     private String binNumber;
+    private int sqLiteID;
 	
-	public ScannedItem(String turtleProdID, String custProdID, String replenishment, String descOne,
+	public ScannedItem(int id, String turtleProdID, String custProdID, String replenishment, String descOne,
                        String descTwo, int quantity, String max, String min, String binNumber)
 	{
+        this.sqLiteID = id;
 		this.customerProduct = custProdID;
         this.turtleProduct = turtleProdID;
 		this.replenishmentType = replenishment;
@@ -57,6 +59,7 @@ public class ScannedItem implements Parcelable
     public String getMin(){return this.min;}
     public String getMax(){return this.max;}
     public String getBinNumber(){return this.binNumber;}
+    public int getSqLiteID(){return this.sqLiteID;}
 
     public void setQuantity(int newQuantity)
     {

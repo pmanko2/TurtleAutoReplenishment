@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.example.turtleautoreplenishment.databaseservices.ScannedItemDataSource;
 import com.example.turtleautoreplenishment.webservices.HttpClient;
 import com.example.turtleautoreplenishment.webservices.HttpDataDelegate;
 
@@ -36,15 +37,18 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 	protected void onCreate(Bundle savedInstanceState) 
 	{		
 		super.onCreate(savedInstanceState);
-		
+
+        ScannedItemDataSource dataSource = new ScannedItemDataSource(this);
+        dataSource.openDB();
+
 		Intent intent = getIntent(); 
-		scannedItems = intent.getParcelableArrayListExtra("scannedArray");
+		scannedItems = dataSource.getAllItems();
         companyID = intent.getIntExtra("companyID", -1);
 		
 		setContentView(R.layout.activity_scanned_items);
 		
 		final ListView scannedList = (ListView) findViewById(R.id.scanned_items_view);
-		final ScannedItemListAdapter adapter = new ScannedItemListAdapter(this, R.layout.scanned_item_item, scannedItems);
+		final ScannedItemListAdapter adapter = new ScannedItemListAdapter(this, R.layout.scanned_item_item, dataSource);
 		
 		scannedList.setAdapter(adapter);
 

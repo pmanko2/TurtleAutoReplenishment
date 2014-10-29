@@ -26,7 +26,7 @@ public class TurtleSQLiteHelper extends SQLiteOpenHelper
                                         "quantity integer not null, " +
                                         "max text not null, " +
                                         "min text not null, " +
-                                        "bin text not null";
+                                        "bin text not null)";
     }
 
     // create database with item table

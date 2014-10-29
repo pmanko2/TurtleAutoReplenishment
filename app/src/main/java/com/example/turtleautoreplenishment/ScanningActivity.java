@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import com.example.turtleautoreplenishment.barcodescanner.IntentIntegrator;
 import com.example.turtleautoreplenishment.barcodescanner.IntentResult;
+import com.example.turtleautoreplenishment.databaseservices.ScannedItemDataSource;
 import com.example.turtleautoreplenishment.webservices.HttpClient;
 import com.example.turtleautoreplenishment.webservices.HttpDataDelegate;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -34,17 +35,23 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
     private ReplenishmentPagerAdapter pagerAdapter;
     private ViewPager viewPager;
     private Activity currentActivity;
-    private ArrayList<ScannedItem> itemList;
+    //private ArrayList<ScannedItem> itemList;
     private boolean foundProduct;
     private boolean isAuto;
     private String barCode;
     private int companyID;
+    private ScannedItemDataSource itemsDataSource;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{		
 		super.onCreate(savedInstanceState);
         final ActionBar actionBar = getActionBar();
+
+        // needed to open database connection for querying
+        itemsDataSource = new ScannedItemDataSource(this);
+        itemsDataSource.openDB();
+
         isAuto = true;
 
 		setContentView(R.layout.activity_scanning);
@@ -92,7 +99,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
                 }
         );
 
-        itemList = new ArrayList<ScannedItem>(); // this holds all scanned items--might change to db
+        //itemList = new ArrayList<ScannedItem>(); // this holds all scanned items--might change to db
                                                  // implementation
         currentActivity = this;
         Intent intent = getIntent();
@@ -112,7 +119,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
                 saveCurrentItem();
 
                 Intent scannedItems = new Intent(currentActivity, ScannedItemsActivity.class);
-                scannedItems.putParcelableArrayListExtra("scannedArray", itemList);
+                //scannedItems.putParcelableArrayListExtra("scannedArray", itemList);
                 scannedItems.putExtra("companyID", companyID);
                 startActivity(scannedItems);
 
@@ -147,13 +154,21 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 			String replenishType = (isAuto) ? "Auto" : "Manual";
             ReplenishmentFragment currentFragment = (isAuto) ? pagerAdapter.getRegisteredFragment(0) : pagerAdapter.getRegisteredFragment(1);
 
-			ScannedItem item = new ScannedItem(currentFragment.getTurtleProductNumber(),
+//			ScannedItem item = new ScannedItem(currentFragment.getTurtleProductNumber(),
+//                    currentFragment.getCustomerProductNumber(), replenishType,
+//                    currentFragment.getDescOne(), currentFragment.getDescTwo(),
+//					currentFragment.getItemQuantity(), currentFragment.getItemMax(),
+//                    currentFragment.getItemMin(), currentFragment.getBin());
+
+            ScannedItem item = itemsDataSource.createScannedItem(currentFragment.getTurtleProductNumber(),
                     currentFragment.getCustomerProductNumber(), replenishType,
                     currentFragment.getDescOne(), currentFragment.getDescTwo(),
 					currentFragment.getItemQuantity(), currentFragment.getItemMax(),
                     currentFragment.getItemMin(), currentFragment.getBin());
 
-			itemList.add(item);
+            Log.i("DB Activity: ", "Created new item in DB. Item no: " + item.getSqLiteID());
+
+			//itemList.add(item);
 		}
 		
 	}
@@ -239,13 +254,18 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
                     ReplenishmentFragment currentFragment = (isAuto) ? autoFragment : manualFragment;
 
                     // TODO null check for fragments
-                    // TODO better memory management for reports/items recently scanned
-                    ScannedItem item = new ScannedItem(currentFragment.getTurtleProductNumber(),
+//                    ScannedItem item = new ScannedItem(currentFragment.getTurtleProductNumber(),
+//                            currentFragment.getCustomerProductNumber(), replenishType,
+//                            currentFragment.getDescOne(), currentFragment.getDescTwo(),
+//                            currentFragment.getItemQuantity(), currentFragment.getItemMax(),
+//                            currentFragment.getItemMin(), currentFragment.getBin());
+//                    itemList.add(item);
+
+                    ScannedItem item = itemsDataSource.createScannedItem(currentFragment.getTurtleProductNumber(),
                             currentFragment.getCustomerProductNumber(), replenishType,
                             currentFragment.getDescOne(), currentFragment.getDescTwo(),
                             currentFragment.getItemQuantity(), currentFragment.getItemMax(),
                             currentFragment.getItemMin(), currentFragment.getBin());
-                    itemList.add(item);
 
                     autoFragment.clearProductInfo();
                     manualFragment.clearProductInfo();
@@ -376,5 +396,16 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
         menu.setFadeDegree(0.35f);
         menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
     }
-	
+
+    @Override
+    protected void onResume() {
+        itemsDataSource.openDB();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        itemsDataSource.closeDB();
+        super.onPause();
+    }
 }

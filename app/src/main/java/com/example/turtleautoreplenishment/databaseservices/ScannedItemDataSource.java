@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.turtleautoreplenishment.ScannedItem;
 
@@ -64,6 +65,14 @@ public class ScannedItemDataSource
         return newScannedItem;
     }
 
+    public void deleteScannedItem(ScannedItem toDelete)
+    {
+        int idToDelete = toDelete.getSqLiteID();
+        database.delete("id", columns[0] + " = " + idToDelete, null);
+
+        Log.i("Database Event: ", "Deleted item: " + idToDelete);
+    }
+
     public ArrayList<ScannedItem> getAllItems()
     {
         ArrayList<ScannedItem> scannedItems = new ArrayList<ScannedItem>();
@@ -83,8 +92,32 @@ public class ScannedItemDataSource
         return scannedItems;
     }
 
+    public ScannedItem getScannedItemByID(int id)
+    {
+        Cursor cursor = database.query("item", columns, "id = " + id, null, null, null, null);
+        cursor.moveToFirst();
+        ScannedItem toReturn = cursorToScannedItem(cursor);
+        cursor.close();
+
+        return toReturn;
+    }
+
+    public void updateItem(ScannedItem updatedItem)
+    {
+        ContentValues valuesToUpdate = new ContentValues();
+        valuesToUpdate.put(columns[3], updatedItem.getQuantity());
+        valuesToUpdate.put(columns[6], updatedItem.getQuantity());
+        valuesToUpdate.put(columns[7], updatedItem.getMax());
+        valuesToUpdate.put(columns[8], updatedItem.getMin());
+
+        int updatedID = database.update("item", valuesToUpdate, "id = " + updatedItem.getSqLiteID(),null);
+
+        Log.i("Database Event: ", "Updated item: " + updatedID);
+    }
+
     private ScannedItem cursorToScannedItem(Cursor cursor)
     {
+        int id = cursor.getInt(0);
         String turtleProd = cursor.getString(1);
         String custProd = cursor.getString(2);
         String repType = cursor.getString(3);
@@ -95,9 +128,10 @@ public class ScannedItemDataSource
         String max = cursor.getString(8);
         String bin = cursor.getString(9);
 
-        return new ScannedItem(turtleProd, custProd, repType, descOne,
+        return new ScannedItem(id, turtleProd, custProd, repType, descOne,
                                 descTwo, quantity, min, max, bin);
-
     }
+
+
 
 }

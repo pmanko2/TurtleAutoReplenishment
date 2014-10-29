@@ -62,11 +62,12 @@ public class ScannedItem implements Parcelable
     {
         this.quantity = newQuantity;
     }
-
     public void setReplenishmentType(String newRepType)
     {
         this.replenishmentType = newRepType;
     }
+    public void setMin(String newMin){this.min = newMin;}
+    public void setMax(String newMax){this.max = newMax;}
 
 	@Override
 	public int describeContents() {

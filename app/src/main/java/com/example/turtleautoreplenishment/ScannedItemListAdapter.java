@@ -8,12 +8,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Checkable;
 import android.widget.CompoundButton;
@@ -37,6 +39,7 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
 	private Context context;
     private ArrayList<ScannedItem> toDelete;
     private HashMap<Integer, Boolean> selected = new HashMap<Integer, Boolean>();
+    private boolean isAuto;
 	
 	public ScannedItemListAdapter(Context context, int resource, ArrayList<ScannedItem> itemList) 
 	{
@@ -45,6 +48,7 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
 		this.resourceID = resource;
 		this.context = context;
         toDelete = new ArrayList<ScannedItem>();
+        isAuto = false;
 	}
 	
 	@Override
@@ -63,11 +67,15 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
         TextView customerID = (TextView) view.findViewById(R.id.order_customer_id);
         TextView quantity = (TextView) view.findViewById(R.id.order_item_quantity);
         TextView type = (TextView) view.findViewById(R.id.replenishment_type);
+        TextView max = (TextView) view.findViewById(R.id.list_max);
+        TextView min = (TextView) view.findViewById(R.id.list_min);
 
         turtleID.setText(list.get(position).getTurtleProduct());
         customerID.setText(list.get(position).getCustomerProduct());
         quantity.setText(String.valueOf(list.get(position).getQuantity()));
         type.setText(list.get(position).getReplenishmentType());
+        max.setText("Max: " + list.get(position).getMax());
+        min.setText("Min: " + list.get(position).getMin());
 
         Integer curPosition = position;
 
@@ -165,20 +173,17 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
         final EditText maxEdit = (EditText) editDialog.findViewById(R.id.edit_max);
         final EditText minEdit = (EditText) editDialog.findViewById(R.id.edit_min);
         final EditText qtyEdit = (EditText) editDialog.findViewById(R.id.edit_quantity);
-        final Switch repSwitch = (Switch) editDialog.findViewById(R.id.type_switch);
+        final Button auto = (Button) editDialog.findViewById(R.id.auto_button);
+        final Button manual = (Button) editDialog.findViewById(R.id.manual_button);
 
-        ScannedItem item = list.get(itemToEdit);
+        final ScannedItem item = list.get(itemToEdit);
 
         maxEdit.setText(item.getMax());
         minEdit.setText(item.getMin());
         qtyEdit.setText("" + item.getQuantity());
 
         // on = manual, off = auto
-        repSwitch.setTextOn("Manual");
-        repSwitch.setTextOff("Auto");
-
-        boolean on = (item.getReplenishmentType().equals("Manual"));
-        repSwitch.setChecked(on);
+        setupButtons(editDialog, item, auto, manual);
 
         // if user goes ahead with edit, send request for edit to server. wait for confirmation
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener(){
@@ -187,18 +192,25 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
             public void onClick(DialogInterface dialogInterface, int id) {
                 ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
                 params.add(new BasicNameValuePair("tag", "edit_item"));
-                params.add(new BasicNameValuePair("cust_no", "1"));
-                params.add(new BasicNameValuePair("cust_prod", "2"));   //TODO change once everything connected
-                params.add(new BasicNameValuePair("new_max", "200"));
-                params.add(new BasicNameValuePair("new_min", "10"));
+                params.add(new BasicNameValuePair("cust_no", "1")); //TODO change once everything connected
+                params.add(new BasicNameValuePair("cust_prod", item.getCustomerProduct()));
+                params.add(new BasicNameValuePair("new_max", maxEdit.getText().toString()));
+                params.add(new BasicNameValuePair("new_min", minEdit.getText().toString()));
 
                 //HttpClient.getInstance().getJsonInBackground("POST", ScannedItemListAdapter.this, params);
 
-                //TODO quantity has to be handled differently
-                ScannedItem toEdit = list.get(itemToEdit);
-                toEdit.setQuantity(Integer.parseInt(qtyEdit.getText().toString()));
-                toEdit.setReplenishmentType("Manual");
+
+                item.setQuantity(Integer.parseInt(qtyEdit.getText().toString()));
+                item.setMax(maxEdit.getText().toString());
+                item.setMin(minEdit.getText().toString());
+
+                String replenishmentType = (isAuto) ? "Auto" : "Manual";
+                item.setReplenishmentType(replenishmentType);
+
                 notifyDataSetChanged();
+
+                Toast.makeText(context, "Product " + item.getCustomerProduct() +
+                        " successfully edited", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -210,11 +222,51 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
             }
         });
 
-        AlertDialog dialog = builder.create();
-        //setupEditDialogValues(itemToEdit, dialog);
-        dialog.show();
+        builder.create().show();
 
 
+    }
+
+    // use this method to setup buttons to act as a switch for edit type functionality
+    private void setupButtons(View editDialog, ScannedItem item, final Button auto, final Button manual)
+    {
+        boolean isManual = (item.getReplenishmentType().equals("Manual"));
+
+        if(isManual) {
+            manual.setBackgroundColor(Color.GRAY);
+            isAuto = false;
+        }
+        else {
+            auto.setBackgroundColor(Color.GRAY);
+            isAuto = true;
+        }
+
+        //when user clicks auto we want to switch from manual button to auto button
+        auto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                if(!isAuto)
+                {
+                    auto.setBackgroundColor(Color.GRAY);
+                    manual.setBackgroundColor(Color.parseColor("#ff000000"));
+                    isAuto = true;
+                }
+            }
+        });
+
+        manual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                if(isAuto)
+                {
+                    manual.setBackgroundColor(Color.GRAY);
+                    auto.setBackgroundColor(Color.parseColor("#ff000000"));
+                    isAuto = false;
+                }
+            }
+        });
     }
 
 }

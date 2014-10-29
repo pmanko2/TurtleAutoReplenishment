@@ -9,9 +9,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp">
+        android:layout_marginLeft="20dp">
 
         <TextView
             android:id="@+id/order_turtle_id"
@@ -39,14 +40,42 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"/>
 
-    <TextView
-        android:id="@+id/replenishment_type"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="manual"
-        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="25dp" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Max: 5"
+            android:id="@+id/list_max"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Min: 100"
+            android:id="@+id/list_min"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/replenishment_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="manual"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="25dp" />
+
+    </LinearLayout>
 
 </RelativeLayout>

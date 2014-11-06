@@ -8,19 +8,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.Checkable;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +62,8 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
 
         ArrayList<ScannedItem> list = dataSource.getAllItems();
 
+        Log.i("LIST VIEW INFOR: ", "Position inflating: " + position + " List size: " + list.size() + " Item at position " + list.get(position).getQuantity());
+
         // set scanned item textview information
         TextView turtleID = (TextView) view.findViewById(R.id.order_turtle_id);
         TextView customerID = (TextView) view.findViewById(R.id.order_customer_id);
@@ -99,8 +95,10 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
 		return view;
 	}
 
-    public void indicateChecked(int id, boolean checked)
+    public void indicateChecked(int position, boolean checked)
     {
+        int id = dataSource.getAllItems().get(position).getSqLiteID();
+
         Log.i("Indicating Checked: ", "Position: " + id + " " + checked);
         selected.put(id, checked);
         notifyDataSetChanged();
@@ -274,6 +272,12 @@ public class ScannedItemListAdapter extends ArrayAdapter<ScannedItem> implements
                 }
             }
         });
+    }
+
+    @Override
+    public int getCount()
+    {
+        return dataSource.getAllItems().size();
     }
 
 }

@@ -32,13 +32,14 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 {
 	private ArrayList<ScannedItem> scannedItems;
     private int companyID;
+    private ScannedItemDataSource dataSource;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{		
 		super.onCreate(savedInstanceState);
 
-        ScannedItemDataSource dataSource = new ScannedItemDataSource(this);
+        dataSource = new ScannedItemDataSource(this);
         dataSource.openDB();
 
 		Intent intent = getIntent(); 
@@ -215,4 +216,16 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 		Log.i("Send report result: ", ret.toString());
 		
 	}
+
+    @Override
+    protected void onResume() {
+        dataSource.openDB();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        dataSource.closeDB();
+        super.onPause();
+    }
 }

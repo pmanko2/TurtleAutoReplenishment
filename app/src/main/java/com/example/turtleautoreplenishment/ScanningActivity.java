@@ -133,6 +133,8 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
         //setupSlidingMenu();
 
 		handleScan(scanButton);
+
+        continueOrderPrompt();
 	}
 
     @Override
@@ -395,6 +397,40 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         menu.setFadeDegree(0.35f);
         menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+    }
+
+    private void continueOrderPrompt()
+    {
+        boolean orderExists = !itemsDataSource.getAllItems().isEmpty();
+
+        Log.i("DATABASE INFORMATION: ", "Does the order exist?: " + orderExists);
+
+        if(orderExists)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle("Previous Order Found");
+            builder.setMessage("Would you like to continue with your " +
+                    "previous order or start a new one?");
+
+            builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+
+                }
+            });
+
+            builder.setNegativeButton("Start New Order", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    itemsDataSource.clearTable();
+                }
+            });
+
+            builder.create().show();
+        }
     }
 
     @Override

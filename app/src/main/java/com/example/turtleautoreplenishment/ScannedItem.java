@@ -26,8 +26,10 @@ public class ScannedItem implements Parcelable
         this.descriptionOne = descOne;
         this.descriptionTwo = descTwo;
 		this.quantity = quantity;
-        this.max = max.substring(5);    //character 5 is where the max # starts in Max: 1
-        this.min = min.substring(5);
+        //this.max = max.substring(5);    //character 5 is where the max # starts in Max: 1
+        //this.min = min.substring(5);
+        this.max = max;
+        this.min = min;
         this.binNumber = binNumber.substring(5);
 	}
 	

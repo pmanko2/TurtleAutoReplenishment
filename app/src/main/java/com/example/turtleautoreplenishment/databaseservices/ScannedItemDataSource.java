@@ -68,7 +68,7 @@ public class ScannedItemDataSource
     public void deleteScannedItem(ScannedItem toDelete)
     {
         int idToDelete = toDelete.getSqLiteID();
-        database.delete("id", columns[0] + " = " + idToDelete, null);
+        database.delete("item", columns[0] + " = " + idToDelete, null);
 
         Log.i("Database Event: ", "Deleted item: " + idToDelete);
     }
@@ -115,6 +115,13 @@ public class ScannedItemDataSource
         Log.i("Database Event: ", "Updated item: " + updatedID);
     }
 
+    public void clearTable()
+    {
+        int numDeleted = database.delete("item", "1", null);
+
+        Log.i("Database Event: ", numDeleted + " rows DELETED");
+    }
+
     private ScannedItem cursorToScannedItem(Cursor cursor)
     {
         int id = cursor.getInt(0);
@@ -131,7 +138,5 @@ public class ScannedItemDataSource
         return new ScannedItem(id, turtleProd, custProd, repType, descOne,
                                 descTwo, quantity, min, max, bin);
     }
-
-
 
 }

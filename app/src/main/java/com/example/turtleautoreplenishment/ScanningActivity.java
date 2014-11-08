@@ -401,7 +401,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 
     private void continueOrderPrompt()
     {
-        boolean orderExists = !itemsDataSource.getAllItems().isEmpty();
+        boolean orderExists = itemsDataSource.getCount() != 0;
 
         Log.i("DATABASE INFORMATION: ", "Does the order exist?: " + orderExists);
 

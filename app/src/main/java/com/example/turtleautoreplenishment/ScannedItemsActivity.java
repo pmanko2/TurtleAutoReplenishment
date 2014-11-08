@@ -13,6 +13,7 @@ import com.example.turtleautoreplenishment.webservices.HttpClient;
 import com.example.turtleautoreplenishment.webservices.HttpDataDelegate;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -30,7 +31,7 @@ import android.widget.Toast;
 
 public class ScannedItemsActivity extends FragmentActivity implements HttpDataDelegate
 {
-	private ArrayList<ScannedItem> scannedItems;
+	private Cursor scannedItemsCursor;
     private int companyID;
     private ScannedItemDataSource dataSource;
 	
@@ -43,14 +44,16 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
         dataSource.openDB();
 
 		Intent intent = getIntent(); 
-		scannedItems = dataSource.getAllItems();
+		scannedItemsCursor = dataSource.getAllItems();
         companyID = intent.getIntExtra("companyID", -1);
 		
 		setContentView(R.layout.activity_scanned_items);
 		
 		final ListView scannedList = (ListView) findViewById(R.id.scanned_items_view);
-		final ScannedItemListAdapter adapter = new ScannedItemListAdapter(this, R.layout.scanned_item_item, dataSource);
-		
+		//final ScannedItemListAdapter adapter = new ScannedItemListAdapter(this, R.layout.scanned_item_item, dataSource);
+        Cursor cursor = dataSource.getAllItems();
+		final ScannedItemCursorAdapter adapter = new ScannedItemCursorAdapter(this, scannedItemsCursor, 0, dataSource);
+
 		scannedList.setAdapter(adapter);
 
         // set up contexual menu
@@ -62,8 +65,8 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
             @Override
             public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean checked)
             {
-                Log.i("Contexual menu: ", "Checked state has been changed" + " position: " + position + " checked " + checked);
-                adapter.indicateChecked(position, checked);
+                Log.i("Contexual menu: ", "Checked state has been changed" + " id: " + id + " checked " + checked);
+                adapter.indicateChecked(id, checked);
 
                 // keep track of num checked items -- only show edit button if one item checked
                 if(checked)
@@ -154,7 +157,7 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 			@Override
 			public void onClick(View arg0) 
 			{
-				if(scannedItems.isEmpty())
+				if(dataSource.getCount() == 0)
 				{
 					Toast.makeText(ScannedItemsActivity.this, "You have not scanned any items", Toast.LENGTH_LONG).show();
 				}
@@ -177,7 +180,9 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 		try
 		{
 			JSONArray scannedItemsArray = new JSONArray();
-			
+
+            ArrayList<ScannedItem> scannedItems = dataSource.getArrayItems();
+
 			for(ScannedItem item : scannedItems)
 			{
 				JSONObject arrayItem = new JSONObject();

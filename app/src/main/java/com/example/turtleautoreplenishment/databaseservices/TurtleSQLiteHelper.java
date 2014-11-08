@@ -3,6 +3,7 @@ package com.example.turtleautoreplenishment.databaseservices;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Helper class to facilitate connection to sqlite database
@@ -15,9 +16,9 @@ public class TurtleSQLiteHelper extends SQLiteOpenHelper
     // constructor sets create_db query
     public TurtleSQLiteHelper(Context context)
     {
-        super(context, "autoRepl.db", null, 1);
+        super(context, "autoRepl.db", null, 2);
 
-        CREATE_DB = "create table item (id integer primary key autoincrement, " +
+        CREATE_DB = "create table item (_id integer primary key autoincrement, " +
                                         "custProd text not null, " +
                                         "turtleProd text not null, " +
                                         "repType text not null, " +
@@ -33,12 +34,14 @@ public class TurtleSQLiteHelper extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase database)
     {
+        Log.i("DATABASE: ", "Calling db onCreate");
         database.execSQL(CREATE_DB);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
+        Log.i("DATABASE: ", "Calling db onUpgrade");
         db.execSQL("DROP TABLE IF EXISTS item");
         onCreate(db);
     }

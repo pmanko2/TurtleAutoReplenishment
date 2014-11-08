@@ -17,7 +17,7 @@ public class ScannedItemDataSource
 {
     private SQLiteDatabase database;
     private TurtleSQLiteHelper dbHelper;
-    private String[] columns = {"id", "custProd", "turtleProd", "repType",
+    private String[] columns = {"_id", "custProd", "turtleProd", "repType",
                                 "descOne", "descTwo", "quantity", "max", "min", "bin"};
     private final String TABLE;
 
@@ -56,7 +56,7 @@ public class ScannedItemDataSource
 
         long insertID = database.insert(TABLE, null, values);
 
-        Cursor cursor = database.query("item", columns, "id = " + insertID, null, null, null, null);
+        Cursor cursor = database.query("item", columns, "_id = " + insertID, null, null, null, null);
         cursor.moveToFirst();
 
         ScannedItem newScannedItem = cursorToScannedItem(cursor);
@@ -65,15 +65,21 @@ public class ScannedItemDataSource
         return newScannedItem;
     }
 
-    public void deleteScannedItem(ScannedItem toDelete)
+    public void deleteScannedItem(int idToDelete)
     {
-        int idToDelete = toDelete.getSqLiteID();
-        database.delete("item", columns[0] + " = " + idToDelete, null);
+        int deletedID = database.delete("item", columns[0] + " = " + idToDelete, null);
 
-        Log.i("Database Event: ", "Deleted item: " + idToDelete);
+        Log.i("Database Event: ", "Deleted item: " + deletedID);
     }
 
-    public ArrayList<ScannedItem> getAllItems()
+    public Cursor getAllItems()
+    {
+        Cursor cursor = database.query("item", columns, null, null, null, null, null);
+
+        return cursor;
+    }
+
+    public ArrayList<ScannedItem> getArrayItems()
     {
         ArrayList<ScannedItem> scannedItems = new ArrayList<ScannedItem>();
 
@@ -92,9 +98,10 @@ public class ScannedItemDataSource
         return scannedItems;
     }
 
+
     public ScannedItem getScannedItemByID(int id)
     {
-        Cursor cursor = database.query("item", columns, "id = " + id, null, null, null, null);
+        Cursor cursor = database.query("item", columns, "_id = " + id, null, null, null, null);
         cursor.moveToFirst();
         ScannedItem toReturn = cursorToScannedItem(cursor);
         cursor.close();
@@ -110,7 +117,7 @@ public class ScannedItemDataSource
         valuesToUpdate.put(columns[7], updatedItem.getMax());
         valuesToUpdate.put(columns[8], updatedItem.getMin());
 
-        int updatedID = database.update("item", valuesToUpdate, "id = " + updatedItem.getSqLiteID(),null);
+        int updatedID = database.update("item", valuesToUpdate, "_id = " + updatedItem.getSqLiteID(),null);
 
         Log.i("Database Event: ", "Updated item: " + updatedID);
     }
@@ -137,6 +144,23 @@ public class ScannedItemDataSource
 
         return new ScannedItem(id, turtleProd, custProd, repType, descOne,
                                 descTwo, quantity, min, max, bin);
+    }
+
+    public int getCount()
+    {
+        Cursor cursor = this.getAllItems();
+        cursor.moveToFirst();
+        int counter = 0;
+
+        while(!cursor.isAfterLast())
+        {
+            counter++;
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+
+        return counter;
     }
 
 }

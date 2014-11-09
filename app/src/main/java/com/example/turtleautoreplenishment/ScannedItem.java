@@ -3,7 +3,7 @@ package com.example.turtleautoreplenishment;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ScannedItem implements Parcelable 
+public class ScannedItem
 {
 	private String customerProduct;
     private String turtleProduct;
@@ -73,39 +73,4 @@ public class ScannedItem implements Parcelable
     }
     public void setMin(String newMin){this.min = newMin;}
     public void setMax(String newMax){this.max = newMax;}
-
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel out, int flags) 
-	{
-		out.writeString(customerProduct);
-        out.writeString(turtleProduct);
-		out.writeString(replenishmentType);
-        out.writeString(descriptionOne);
-        out.writeString(descriptionTwo);
-		out.writeInt(quantity);
-        out.writeString(max);
-        out.writeString(min);
-        out.writeString(binNumber);
-	}
-	
-	public static final Parcelable.Creator<ScannedItem> CREATOR = new Parcelable.Creator<ScannedItem>() {
-
-		@Override
-		public ScannedItem createFromParcel(Parcel source) 
-		{
-			return new ScannedItem(source);
-		}
-
-		@Override
-		public ScannedItem[] newArray(int size) 
-		{
-			return new ScannedItem[size];
-		}
-	};
 }

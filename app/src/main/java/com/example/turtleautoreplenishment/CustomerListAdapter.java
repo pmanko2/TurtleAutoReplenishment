@@ -28,8 +28,6 @@ public class CustomerListAdapter extends ArrayAdapter<Customer> implements Obser
 		super(context, resource, customerList);
 		this.list = customerList;
 		this.context = context;
-		
-		CurrentLocation.getCurrentLocation().addObserver(this);
 	}
 	
 	@Override
@@ -52,80 +50,8 @@ public class CustomerListAdapter extends ArrayAdapter<Customer> implements Obser
 		
 		name.setText(list.get(position).getName());
 		address.setText(list.get(position).getFullAddress());
-		//calculateDistanceToCustomer(list.get(position), distance);
 		
 		return view;
-	}
-	
-	private void calculateDistanceToCustomer(final Customer current, final TextView distanceText)
-	{
-		final Location currentLocation = CurrentLocation.getCurrentLocation().getLatestLocation();
-		
-		if(currentLocation == null)
-		{
-			distanceText.setText("");
-			return;
-		}
-		
-		new AsyncTask<Object, Object, Object>()
-		{
-
-			@Override
-			protected Object doInBackground(Object... params) 
-			{
-				Geocoder geo = new Geocoder(context);
-				
-				String custAddressString = current.getFullAddress();
-				List<Address> customerAddressList = null;
-				try 
-				{
-					customerAddressList = geo.getFromLocationName(custAddressString, 1);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				return customerAddressList;
-			}
-			
-			@Override
-			protected void onPostExecute(Object result)
-			{
-				String distanceString = "";
-				
-				if(result instanceof List<?> && result != null)
-				{
-					
-					@SuppressWarnings("unchecked")
-					List<Address> customerAddressList = (List<Address>) result;
-					
-					Address customerAddress = null;
-					
-					if(customerAddressList.size() > 0)
-						customerAddress = customerAddressList.get(0);
-					else
-						return;
-						
-					if(customerAddress.hasLatitude() && customerAddress.hasLongitude())
-					{
-						// new location object based on lat and log of address object
-						Location custLocation = new Location("");
-						custLocation.setLatitude(customerAddress.getLatitude());
-						custLocation.setLongitude(customerAddress.getLongitude());
-						
-						float distanceToCurrentCustomer = currentLocation.distanceTo(custLocation);
-						double distanceInMiles = distanceToCurrentCustomer * .00062137;
-						
-						distanceString = String.format("%.2f", distanceInMiles) + " mi";
-					}
-				}
-				
-				distanceText.setText(distanceString);
-				CustomerListAdapter.this.notifyDataSetChanged();
-			}
-			
-		}.execute();
-		
 	}
 
 	@Override

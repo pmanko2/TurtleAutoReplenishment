@@ -132,8 +132,8 @@ public class ScannedItemDataSource
     private ScannedItem cursorToScannedItem(Cursor cursor)
     {
         int id = cursor.getInt(0);
-        String turtleProd = cursor.getString(1);
-        String custProd = cursor.getString(2);
+        String turtleProd = cursor.getString(2);
+        String custProd = cursor.getString(1);
         String repType = cursor.getString(3);
         String descOne = cursor.getString(4);
         String descTwo = cursor.getString(5);

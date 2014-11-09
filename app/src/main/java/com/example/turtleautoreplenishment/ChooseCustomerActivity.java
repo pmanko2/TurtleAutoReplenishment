@@ -45,9 +45,6 @@ public class ChooseCustomerActivity extends FragmentActivity implements
 		
 		paused = false;
 		
-		//create location singleton
-		CurrentLocation.getCurrentLocation().init(this);
-		
 		// test arraylist of customers -- needs to be taken from db
 		list = new ArrayList<Customer>();
 		
@@ -55,18 +52,6 @@ public class ChooseCustomerActivity extends FragmentActivity implements
 		Bundle passed = intent.getBundleExtra("loginInfo");
 		
 		loadCustomerData();
-
-	}
-
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState) 
-	{
-
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) 
-	{
 
 	}
 
@@ -89,131 +74,18 @@ public class ChooseCustomerActivity extends FragmentActivity implements
 	public void onPause() 
 	{
 		super.onPause();
-		
-		CurrentLocation.getCurrentLocation().getLocationManager()
-		.removeUpdates(CurrentLocation.getCurrentLocation());
-		
 		paused = true;
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		if (paused) {
-			CurrentLocation.getCurrentLocation().startUpdates();
-		}
 	}
 
 	@Override
 	public void onDestroy() 
 	{
 		super.onDestroy();
-		
-		CurrentLocation.getCurrentLocation().getLocationManager()
-		.removeUpdates(CurrentLocation.getCurrentLocation());
-	}
-	
-	// method to determine which customer is closest to user's location
-	private void determineClosestCustomer(final Location current)
-	{
-		
-		// do in background since geocoder relies on google web service
-		new AsyncTask<Object, Object, Object>()
-		{
-
-			@Override
-			protected Object doInBackground(Object... arg0) 
-			{
-				Geocoder geo = new Geocoder(ChooseCustomerActivity.this);
-				Customer closestCustomer = null;
-				// set distance to large number to begin
-				float closestDistance = 1000000000;
-				
-				for(Customer cust : list)
-				{
-					try 
-					{
-						// construct Address object from address in customer object
-						String custAddressString = cust.getFullAddress();
-						List<Address> customerAddressList = geo.getFromLocationName(custAddressString, 1);
-						Address customerAddress = null;
-						
-						if(customerAddressList.size() > 0)
-							customerAddress = customerAddressList.get(0);
-							
-						// new location object based on lat and log of address object
-						Location custLocation = new Location("");
-						custLocation.setLatitude(customerAddress.getLatitude());
-						custLocation.setLongitude(customerAddress.getLongitude());
-						
-						float distanceToCurrentCustomer = current.distanceTo(custLocation);
-						
-						// if the distance to current customer is less than closest distance set 
-						// closest customer as current
-						if(distanceToCurrentCustomer < closestDistance)
-						{
-							closestCustomer = cust;
-							closestDistance = distanceToCurrentCustomer;
-						}
-						
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				
-				return closestCustomer;
-			}
-			
-			@Override
-			protected void onPostExecute(Object result) 
-			{
-				if(result != null && result instanceof Customer)
-				{
-					showClosestCustomerDialog((Customer) result);
-				}
-			}
-			
-		}.execute();
-		
-	}
-	
-	// shows alert dialog informing user of the closest customer location and if he wants to scan
-	// for that location
-	private void showClosestCustomerDialog(final Customer closest)
-	{
-		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-		alertBuilder.setTitle("Closest Customer");
-		
-		alertBuilder.setMessage("The closest customer location to you is " + closest.getName() + 
-				" located at " + closest.getFirstAddress() + ". Would you like to use this location?");
-		
-		alertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) 
-			{
-				Intent intent = new Intent(ChooseCustomerActivity.this, ScanningActivity.class);
-				intent.putExtra("companyName", closest.getName());
-				startActivity(intent);
-				
-			}
-		});
-		
-		alertBuilder.setNegativeButton("No", new DialogInterface.OnClickListener(){
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) 
-			{
-				dialog.cancel();
-				
-			}
-			
-		});
-		
-		AlertDialog dialog = alertBuilder.create();
-		dialog.show();
 	}
 
 	@Override
@@ -296,7 +168,7 @@ public class ChooseCustomerActivity extends FragmentActivity implements
 			{
 				Intent intent = new Intent(ChooseCustomerActivity.this, ScanningActivity.class);
 				intent.putExtra("companyName", list.get(position).getName());
-                intent.putExtra("companyNumber", position);
+                intent.putExtra("companyNumber", list.get(position).getId());
 				startActivity(intent);
 				
 			}

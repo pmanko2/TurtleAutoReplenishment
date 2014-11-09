@@ -119,7 +119,6 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
                 saveCurrentItem();
 
                 Intent scannedItems = new Intent(currentActivity, ScannedItemsActivity.class);
-                //scannedItems.putParcelableArrayListExtra("scannedArray", itemList);
                 scannedItems.putExtra("companyID", companyID);
                 startActivity(scannedItems);
 

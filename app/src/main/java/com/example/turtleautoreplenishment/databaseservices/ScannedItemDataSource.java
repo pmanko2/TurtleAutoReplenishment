@@ -109,7 +109,7 @@ public class ScannedItemDataSource
         return toReturn;
     }
 
-    public void updateItem(ScannedItem updatedItem)
+    public void updateItem(ScannedItem updatedItem, int sqlID)
     {
         ContentValues valuesToUpdate = new ContentValues();
         valuesToUpdate.put(columns[3], updatedItem.getQuantity());
@@ -117,7 +117,7 @@ public class ScannedItemDataSource
         valuesToUpdate.put(columns[7], updatedItem.getMax());
         valuesToUpdate.put(columns[8], updatedItem.getMin());
 
-        int updatedID = database.update("item", valuesToUpdate, "_id = " + updatedItem.getSqLiteID(),null);
+        int updatedID = database.update("item", valuesToUpdate, "_id = " + sqlID, null);
 
         Log.i("Database Event: ", "Updated item: " + updatedID);
     }

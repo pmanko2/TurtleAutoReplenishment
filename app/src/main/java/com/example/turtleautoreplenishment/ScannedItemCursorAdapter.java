@@ -132,10 +132,10 @@ public class ScannedItemCursorAdapter extends CursorAdapter implements HttpDataD
 
     public void editSelected()
     {
-//        for(Integer keyToEdit : selected.keySet())
-//        {
-//            showEditItemDialog(dataSource.getScannedItemByID(keyToEdit));
-//        }
+        for(Integer keyToEdit : selected.keySet())
+        {
+            showEditItemDialog(dataSource.getScannedItemByID(keyToEdit), keyToEdit);
+        }
     }
 
     //handle json return for edit item request
@@ -172,7 +172,7 @@ public class ScannedItemCursorAdapter extends CursorAdapter implements HttpDataD
 
     }
 
-    private void showEditItemDialog(final ScannedItem item)
+    private void showEditItemDialog(final ScannedItem item, final int sqlID)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Edit Item");
@@ -218,8 +218,9 @@ public class ScannedItemCursorAdapter extends CursorAdapter implements HttpDataD
                 String replenishmentType = (isAuto) ? "Auto" : "Manual";
                 item.setReplenishmentType(replenishmentType);
 
-                dataSource.updateItem(item);
+                dataSource.updateItem(item, sqlID);
 
+                dbCursor.requery(); // YES ITS FUCKING DEPRECATED IM WORKING ON IT
                 notifyDataSetChanged();
 
                 Toast.makeText(context, "Product " + item.getCustomerProduct() +

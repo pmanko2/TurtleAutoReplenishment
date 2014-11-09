@@ -94,19 +94,37 @@
         android:layout_marginTop="77dp">
 
         <TextView
-            android:id="@+id/minimum"
+            android:id="@+id/minimum_prompt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="22dp"
-            android:text="Min: 5"/>
+            android:text="Min: "/>
+
+        <TextView
+            android:id="@+id/minimum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="5"
+            android:layout_toEndOf="@+id/minimum_prompt"
+            android:layout_alignParentTop="true" />
+
+        <TextView
+            android:id="@+id/maximum_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Max: "
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
 
         <TextView
             android:id="@+id/maximum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Max: 100"
+            android:text="100"
+            android:layout_marginStart="5dp"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_toEndOf="@+id/maximum_prompt" />
 
         <TextView
             android:id="@+id/bin"

@@ -78,6 +78,10 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
                 else
                     numChecked--;
 
+                String itemDescriptor = (numChecked == 1) ? "item" : "items";
+
+                actionMode.setTitle(numChecked + " " + itemDescriptor + " selected");
+
                 actionMode.invalidate();
             }
 

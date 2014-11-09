@@ -155,12 +155,6 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 			String replenishType = (isAuto) ? "Auto" : "Manual";
             ReplenishmentFragment currentFragment = (isAuto) ? pagerAdapter.getRegisteredFragment(0) : pagerAdapter.getRegisteredFragment(1);
 
-//			ScannedItem item = new ScannedItem(currentFragment.getTurtleProductNumber(),
-//                    currentFragment.getCustomerProductNumber(), replenishType,
-//                    currentFragment.getDescOne(), currentFragment.getDescTwo(),
-//					currentFragment.getItemQuantity(), currentFragment.getItemMax(),
-//                    currentFragment.getItemMin(), currentFragment.getBin());
-
             ScannedItem item = itemsDataSource.createScannedItem(currentFragment.getTurtleProductNumber(),
                     currentFragment.getCustomerProductNumber(), replenishType,
                     currentFragment.getDescOne(), currentFragment.getDescTwo(),
@@ -168,8 +162,6 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
                     currentFragment.getItemMin(), currentFragment.getBin());
 
             Log.i("DB Activity: ", "Created new item in DB. Item no: " + item.getSqLiteID());
-
-			//itemList.add(item);
 		}
 		
 	}
@@ -253,14 +245,6 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
                     ReplenishmentFragment autoFragment = pagerAdapter.getRegisteredFragment(0);
                     ReplenishmentFragment manualFragment = pagerAdapter.getRegisteredFragment(1);
                     ReplenishmentFragment currentFragment = (isAuto) ? autoFragment : manualFragment;
-
-                    // TODO null check for fragments
-//                    ScannedItem item = new ScannedItem(currentFragment.getTurtleProductNumber(),
-//                            currentFragment.getCustomerProductNumber(), replenishType,
-//                            currentFragment.getDescOne(), currentFragment.getDescTwo(),
-//                            currentFragment.getItemQuantity(), currentFragment.getItemMax(),
-//                            currentFragment.getItemMin(), currentFragment.getBin());
-//                    itemList.add(item);
 
                     ScannedItem item = itemsDataSource.createScannedItem(currentFragment.getTurtleProductNumber(),
                             currentFragment.getCustomerProductNumber(), replenishType,

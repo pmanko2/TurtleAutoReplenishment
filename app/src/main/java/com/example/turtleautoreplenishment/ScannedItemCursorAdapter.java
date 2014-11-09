@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.turtleautoreplenishment.databaseservices.ScannedItemDataSource;
+import com.example.turtleautoreplenishment.webservices.HttpClient;
 import com.example.turtleautoreplenishment.webservices.HttpDataDelegate;
 
 import org.apache.http.NameValuePair;
@@ -28,6 +29,7 @@ import java.util.HashMap;
 
 /**
  * Created by Pawel on 11/6/2014.
+ * Replaces arraylist adapter -- better integration with sqlite db
  */
 public class ScannedItemCursorAdapter extends CursorAdapter implements HttpDataDelegate
 {
@@ -121,13 +123,18 @@ public class ScannedItemCursorAdapter extends CursorAdapter implements HttpDataD
 
     public void deleteSelected()
     {
+        int numDeleted = 0;
+
         for(Integer toDelete : selected.keySet())
         {
             dataSource.deleteScannedItem(toDelete);
+            numDeleted++;
         }
 
         dbCursor.requery(); // I KNOW THIS IS DEPRECATED OK?
         notifyDataSetChanged();
+
+        Toast.makeText(context, numDeleted + " items successfully deleted", Toast.LENGTH_LONG).show();
     }
 
     public void editSelected()
@@ -155,17 +162,34 @@ public class ScannedItemCursorAdapter extends CursorAdapter implements HttpDataD
                 // if server was not able to confirm change, indicate with Toast
                 if(success == 0)
                 {
-                    Toast.makeText(context, "Edit Item Was Unsuccessful", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Item could not be edited. Server may be unresponsive.", Toast.LENGTH_LONG).show();
                 }
                 else
                 {
-                    // if server indicates that item was successfully edited, indicate to user
-                    Toast.makeText(context, "Successfully Edited Item", Toast.LENGTH_LONG).show();
+                    int sqlID = returnJson.getInt("sql_id");
+                    int quantity = returnJson.getInt("quantity");
+                    String min = returnJson.getString("min");
+                    String max = returnJson.getString("max");
+                    String rep = returnJson.getString("replenishment");
+                    ScannedItem item = dataSource.getScannedItemByID(sqlID);
+
+                    item.setQuantity(quantity);
+                    item.setMax(max);
+                    item.setMin(min);
+                    item.setReplenishmentType(rep);
+
+                    dataSource.updateItem(item, sqlID);
+
+                    dbCursor.requery(); // YES ITS FUCKING DEPRECATED IM WORKING ON IT
+                    notifyDataSetChanged();
+
+                    Toast.makeText(context, "Product " + item.getTurtleProduct() +
+                            " successfully edited", Toast.LENGTH_LONG).show();
+
                 }
 
             } catch (JSONException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Toast.makeText(context, "Item could not be edited. Server may be unresponsive.", Toast.LENGTH_LONG).show();
             }
 
         }
@@ -201,30 +225,31 @@ public class ScannedItemCursorAdapter extends CursorAdapter implements HttpDataD
 
             @Override
             public void onClick(DialogInterface dialogInterface, int id) {
+
+                int maxInt = Integer.valueOf(maxEdit.getText().toString());
+                int minInt = Integer.valueOf(minEdit.getText().toString());
+
+                boolean minOK = minInt <= maxInt;
+
+                if(!minOK)
+                {
+                    minEdit.setError("Min must be less than Max");
+                    Toast.makeText(context, "Minimum Value must be less than maximum", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+                String replenishmentType = (isAuto) ? "Auto" : "Manual";
                 params.add(new BasicNameValuePair("tag", "edit_item"));
                 params.add(new BasicNameValuePair("cust_no", "1")); //TODO change once everything connected
                 params.add(new BasicNameValuePair("cust_prod", item.getCustomerProduct()));
                 params.add(new BasicNameValuePair("new_max", maxEdit.getText().toString()));
                 params.add(new BasicNameValuePair("new_min", minEdit.getText().toString()));
+                params.add(new BasicNameValuePair("quantity", qtyEdit.getText().toString()));
+                params.add(new BasicNameValuePair("sql_id", Integer.toString(sqlID)));
+                params.add(new BasicNameValuePair("replenishment", replenishmentType));
 
-                //HttpClient.getInstance().getJsonInBackground("POST", ScannedItemListAdapter.this, params);
-
-
-                item.setQuantity(Integer.parseInt(qtyEdit.getText().toString()));
-                item.setMax(maxEdit.getText().toString());
-                item.setMin(minEdit.getText().toString());
-
-                String replenishmentType = (isAuto) ? "Auto" : "Manual";
-                item.setReplenishmentType(replenishmentType);
-
-                dataSource.updateItem(item, sqlID);
-
-                dbCursor.requery(); // YES ITS FUCKING DEPRECATED IM WORKING ON IT
-                notifyDataSetChanged();
-
-                Toast.makeText(context, "Product " + item.getCustomerProduct() +
-                        " successfully edited", Toast.LENGTH_LONG).show();
+                HttpClient.getInstance().getJsonInBackground("POST", ScannedItemCursorAdapter.this, params);
             }
         });
 

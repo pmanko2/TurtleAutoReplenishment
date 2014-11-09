@@ -44,6 +44,8 @@ public class ReplenishmentFragment extends Fragment
     private TextView maxText;
     private TextView binText;
     private TextView productThirdDescription;
+    private TextView minPrompt;
+    private TextView maxPrompt;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,9 @@ public class ReplenishmentFragment extends Fragment
         minText = (TextView) fragmentView.findViewById(R.id.minimum);
         maxText = (TextView) fragmentView.findViewById(R.id.maximum);
         binText = (TextView) fragmentView.findViewById(R.id.bin);
+        minPrompt = (TextView) fragmentView.findViewById(R.id.minimum_prompt);
+        maxPrompt = (TextView) fragmentView.findViewById(R.id.maximum_prompt
+        );
 
         itemQuantity.setMinValue(0);
         itemQuantity.setMaxValue(10000);
@@ -90,6 +95,8 @@ public class ReplenishmentFragment extends Fragment
         minText.setText("");
         maxText.setText("");
         binText.setText("");
+        minPrompt.setText("");
+        maxPrompt.setText("");
 
 
         return fragmentView;
@@ -106,8 +113,10 @@ public class ReplenishmentFragment extends Fragment
         productSecondDescription.setText(secondDescription);
         productThirdDescription.setText(thirdDescription);
 
-        minText.setText("Min: " + min);
-        maxText.setText("Max: " + max);
+        minText.setText(min);
+        maxText.setText(max);
+        minPrompt.setText("Min: ");
+        maxPrompt.setText("Max: ");
         binText.setText("Bin: " + bin);
 
 
@@ -129,6 +138,8 @@ public class ReplenishmentFragment extends Fragment
         maxText.setText("");
         binText.setText("");
         productThirdDescription.setText("");
+        minPrompt.setText("");
+        maxPrompt.setText("");
     }
 
     public void clearProductInfo()
@@ -143,6 +154,8 @@ public class ReplenishmentFragment extends Fragment
         maxText.setText("");
         binText.setText("");
         productThirdDescription.setText("");
+        minPrompt.setText("");
+        maxPrompt.setText("");
     }
 
     public String getTurtleProductNumber()

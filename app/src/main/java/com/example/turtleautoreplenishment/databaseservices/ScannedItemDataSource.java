@@ -112,7 +112,7 @@ public class ScannedItemDataSource
     public void updateItem(ScannedItem updatedItem, int sqlID)
     {
         ContentValues valuesToUpdate = new ContentValues();
-        valuesToUpdate.put(columns[3], updatedItem.getQuantity());
+        valuesToUpdate.put(columns[3], updatedItem.getReplenishmentType());
         valuesToUpdate.put(columns[6], updatedItem.getQuantity());
         valuesToUpdate.put(columns[7], updatedItem.getMax());
         valuesToUpdate.put(columns[8], updatedItem.getMin());

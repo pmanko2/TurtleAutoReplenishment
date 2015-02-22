@@ -56,16 +56,6 @@ public class ScannedItemCursorAdapter extends CursorAdapter implements HttpDataD
         return inflater.inflate(R.layout.scanned_item_item, viewGroup, false);
     }
 
-//    values.put(columns[1], custProdID);
-//    values.put(columns[2], turtleProdID);
-//    values.put(columns[3], replenishment);
-//    values.put(columns[4], descOne);
-//    values.put(columns[5], descTwo);
-//    values.put(columns[6], quantity);
-//    values.put(columns[7], max);
-//    values.put(columns[8], min);
-//    values.put(columns[9], binNumber);
-
     @Override
     public void bindView(View view, Context context, Cursor cursor)
     {
@@ -207,14 +197,10 @@ public class ScannedItemCursorAdapter extends CursorAdapter implements HttpDataD
         builder.setView(editDialog);
 
         // set edittexts to values that are assigned to current item being edited
-        final EditText maxEdit = (EditText) editDialog.findViewById(R.id.edit_max);
-        final EditText minEdit = (EditText) editDialog.findViewById(R.id.edit_min);
         final EditText qtyEdit = (EditText) editDialog.findViewById(R.id.edit_quantity);
         final Button auto = (Button) editDialog.findViewById(R.id.auto_button);
         final Button manual = (Button) editDialog.findViewById(R.id.manual_button);
 
-        maxEdit.setText(item.getMax());
-        minEdit.setText(item.getMin());
         qtyEdit.setText("" + item.getQuantity());
 
         // on = manual, off = auto
@@ -226,25 +212,13 @@ public class ScannedItemCursorAdapter extends CursorAdapter implements HttpDataD
             @Override
             public void onClick(DialogInterface dialogInterface, int id) {
 
-                int maxInt = Integer.valueOf(maxEdit.getText().toString());
-                int minInt = Integer.valueOf(minEdit.getText().toString());
-
-                boolean minOK = minInt <= maxInt;
-
-                if(!minOK)
-                {
-                    minEdit.setError("Min must be less than Max");
-                    Toast.makeText(context, "Minimum Value must be less than maximum", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
                 ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
                 String replenishmentType = (isAuto) ? "Auto" : "Manual";
                 params.add(new BasicNameValuePair("tag", "edit_item"));
                 params.add(new BasicNameValuePair("cust_no", "1")); //TODO change once everything connected
                 params.add(new BasicNameValuePair("cust_prod", item.getCustomerProduct()));
-                params.add(new BasicNameValuePair("new_max", maxEdit.getText().toString()));
-                params.add(new BasicNameValuePair("new_min", minEdit.getText().toString()));
+                params.add(new BasicNameValuePair("new_max", "10"));
+                params.add(new BasicNameValuePair("new_min", "10"));
                 params.add(new BasicNameValuePair("quantity", qtyEdit.getText().toString()));
                 params.add(new BasicNameValuePair("sql_id", Integer.toString(sqlID)));
                 params.add(new BasicNameValuePair("replenishment", replenishmentType));

@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pre-dex-items>
+<items version="2" >
 
     <item
-        dex="C:\Users\Pawel\AndroidStudioProjects\TurtleAutoReplenishment\app\build\intermediates\pre-dexed\debug\classes-e6a235d42d668d942c496479e7a64d98b39e6910.jar"
-        jar="C:\Users\Pawel\AndroidStudioProjects\TurtleAutoReplenishment\app\build\intermediates\exploded-aar\TurtleAutoReplenishment\SlidingMenu\unspecified\classes.jar"
+        jar="/home/pawel/projects/TurtleAutoReplenishment/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/libs/internal_impl-20.0.0.jar"
         jumboMode="false"
         revision="20.0.0"
-        sha1="8d6f16bede875c439bf817af8fabbb150f4b4907"/>
+        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d">
+        <dex dex="/home/pawel/projects/TurtleAutoReplenishment/app/build/intermediates/pre-dexed/debug/internal_impl-20.0.0-7f3391f31071796dd6b209ac61357d07074e2d9a.jar" />
+    </item>
     <item
-        dex="C:\Users\Pawel\AndroidStudioProjects\TurtleAutoReplenishment\app\build\intermediates\pre-dexed\debug\support-annotations-20.0.0-99d78af9e70d394b1501b2f7bab35b5f49522c43.jar"
-        jar="C:\Users\Pawel\AppData\Local\Android\android-studio\sdk\extras\android\m2repository\com\android\support\support-annotations\20.0.0\support-annotations-20.0.0.jar"
+        jar="/home/pawel/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/20.0.0/support-annotations-20.0.0.jar"
         jumboMode="false"
         revision="20.0.0"
-        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa"/>
+        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa">
+        <dex dex="/home/pawel/projects/TurtleAutoReplenishment/app/build/intermediates/pre-dexed/debug/support-annotations-20.0.0-5a404310c682afb6e87d08ded8ee8104ab610c05.jar" />
+    </item>
     <item
-        dex="C:\Users\Pawel\AndroidStudioProjects\TurtleAutoReplenishment\app\build\intermediates\pre-dexed\debug\classes-2dcf7f35d361bd5b5221a9b759eaaffa62f01cf3.jar"
-        jar="C:\Users\Pawel\AndroidStudioProjects\TurtleAutoReplenishment\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\classes.jar"
+        jar="/home/pawel/projects/TurtleAutoReplenishment/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/classes.jar"
         jumboMode="false"
         revision="20.0.0"
-        sha1="8694693636ab36910c8100ce527c258ff3ebece0"/>
-    <item
-        dex="C:\Users\Pawel\AndroidStudioProjects\TurtleAutoReplenishment\app\build\intermediates\pre-dexed\debug\internal_impl-20.0.0-d7d997a5ce3b00129c3113c91430805b4c839298.jar"
-        jar="C:\Users\Pawel\AndroidStudioProjects\TurtleAutoReplenishment\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\libs\internal_impl-20.0.0.jar"
-        jumboMode="false"
-        revision="20.0.0"
-        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d"/>
+        sha1="8694693636ab36910c8100ce527c258ff3ebece0">
+        <dex dex="/home/pawel/projects/TurtleAutoReplenishment/app/build/intermediates/pre-dexed/debug/classes-ed294a449eaeab9a6e4fa50176a86e0395e4b5ef.jar" />
+    </item>
 
-</pre-dex-items>
+</items>

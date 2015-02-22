@@ -55,7 +55,6 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 
 		final ListView scannedList = (ListView) findViewById(R.id.scanned_items_view);
 		//final ScannedItemListAdapter adapter = new ScannedItemListAdapter(this, R.layout.scanned_item_item, dataSource);
-        Cursor cursor = dataSource.getAllItems();
 		adapter = new ScannedItemCursorAdapter(this, scannedItemsCursor, 0, dataSource);
 
 		scannedList.setAdapter(adapter);

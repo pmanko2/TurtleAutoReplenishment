@@ -13,62 +13,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Max"
-            android:id="@+id/edit_max_text"
-            android:layout_marginStart="20dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="5"
-            android:id="@+id/edit_max"
-            android:gravity="center_horizontal"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="20dp"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:orientation = "horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="16dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Min"
-            android:id="@+id/edit_min_text"
-            android:layout_marginStart="20dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="5"
-            android:id="@+id/edit_min"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:gravity="center_horizontal"
-            android:layout_marginEnd="20dp"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:orientation = "horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="16dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Qty"
             android:id="@+id/edit_quantity_text"
             android:gravity="center_horizontal"

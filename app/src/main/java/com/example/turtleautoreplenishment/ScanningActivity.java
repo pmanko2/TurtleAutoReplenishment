@@ -12,8 +12,6 @@ import com.example.turtleautoreplenishment.barcodescanner.IntentResult;
 import com.example.turtleautoreplenishment.databaseservices.ScannedItemDataSource;
 import com.example.turtleautoreplenishment.webservices.HttpClient;
 import com.example.turtleautoreplenishment.webservices.HttpDataDelegate;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -182,8 +180,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 			
 			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("tag", "barcode_info"));
-            //TODO change this is only for testing
-			params.add(new BasicNameValuePair("bar_code", "09264431672"));
+			params.add(new BasicNameValuePair("bar_code", barCode));
 			
 			HttpClient.getInstance().getJsonInBackground("POST", this, params);
 		}
@@ -371,15 +368,6 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
             manualFragment.setProductNotFound();
             foundProduct = false;
         }
-    }
-
-    private void setupSlidingMenu()
-    {
-        SlidingMenu menu = new SlidingMenu(this);
-        menu.setMode(SlidingMenu.LEFT);
-        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        menu.setFadeDegree(0.35f);
-        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
     }
 
     private void continueOrderPrompt()

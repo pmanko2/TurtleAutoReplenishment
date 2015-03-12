@@ -23,19 +23,18 @@ import org.json.JSONObject;
 
 import com.example.turtleautoreplenishment.AuthenticatedUser;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.util.Base64;
 import android.util.Log;
+import android.content.Context;
 
 public class HttpClient 
 {
 	static private HttpClient singleton;
-	private String userName;
-	private String password;
 	private String server_url = "http://www2.turtle.com/android/android_connect.php";
 	
 	
-	private HttpClient(){};
+	private HttpClient(){}
 	
 	//singleton class
 	public static HttpClient getInstance()
@@ -48,15 +47,21 @@ public class HttpClient
 	
 	// async method for receiving jsonobject from http request
 	public void getJsonInBackground(final String requestMethod,	final HttpDataDelegate delegate,
-			final ArrayList<NameValuePair> parameters)
+			final ArrayList<NameValuePair> parameters, Context context)
 	{
 		
 		Log.i("Get Json called", delegate.toString());
 		
 		server_url = "http://www2.turtle.com/android/android_connect.php";
-		
+		final ProgressDialog dialog = new ProgressDialog(context);
 		new AsyncTask<Object, Object, Object>()
 		{
+            @Override
+            protected void onPreExecute()
+            {
+                dialog.setMessage("Loading...");
+                dialog.show();
+            }
 
 			@Override
 			protected Object doInBackground(Object... params) 
@@ -81,9 +86,11 @@ public class HttpClient
 			protected void onPostExecute(Object result)
 			{
 				Log.i("Json Result String", result.toString());
+                dialog.dismiss();
 				
 				if(result instanceof JSONObject)
 					delegate.handleAsyncDataReturn(result);
+
 			}
 			
 		}.execute();
@@ -125,7 +132,6 @@ public class HttpClient
 	    	try {
 				json.put("successful", false);
 			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 	    	//Log.e("JSON Parser", "Error parsing data " + e.toString());

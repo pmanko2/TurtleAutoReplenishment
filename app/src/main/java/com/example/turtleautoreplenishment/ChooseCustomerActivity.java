@@ -116,8 +116,9 @@ public class ChooseCustomerActivity extends FragmentActivity implements
 						String city = customer.getString("city");
 						String state = customer.getString("state");
 						String zipCode = customer.getString("zip");
+                        int shipTo = customer.getInt("ship_to");
 						
-						list.add(new Customer(id, name, firstAddress, secondAddress, city, state, zipCode));
+						list.add(new Customer(id, name, firstAddress, secondAddress, city, state, zipCode, shipTo));
 					}
 					
 					setupUI();
@@ -149,7 +150,7 @@ public class ChooseCustomerActivity extends FragmentActivity implements
 		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("tag", "customer_list"));
 		
-		HttpClient.getInstance().getJsonInBackground("POST", this, params);
+		HttpClient.getInstance().getJsonInBackground("POST", this, params, ChooseCustomerActivity.this);
 	}
 	
 	private void setupUI()
@@ -169,6 +170,7 @@ public class ChooseCustomerActivity extends FragmentActivity implements
 				Intent intent = new Intent(ChooseCustomerActivity.this, ScanningActivity.class);
 				intent.putExtra("companyName", list.get(position).getName());
                 intent.putExtra("companyNumber", list.get(position).getId());
+                intent.putExtra("shipTo", list.get(position).getShipTo());
 				startActivity(intent);
 				
 			}

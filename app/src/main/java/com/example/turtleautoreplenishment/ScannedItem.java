@@ -26,24 +26,9 @@ public class ScannedItem
         this.descriptionOne = descOne;
         this.descriptionTwo = descTwo;
 		this.quantity = quantity;
-        //this.max = max.substring(5);    //character 5 is where the max # starts in Max: 1
-        //this.min = min.substring(5);
         this.max = max;
         this.min = min;
         this.binNumber = binNumber.substring(5);
-	}
-	
-	public ScannedItem(Parcel in)
-	{
-		this.customerProduct = in.readString();
-        this.turtleProduct = in.readString();
-		this.replenishmentType = in.readString();
-        this.descriptionOne = in.readString();
-        this.descriptionTwo = in.readString();
-		this.quantity = in.readInt();
-        this.max = in.readString();
-        this.min = in.readString();
-        this.binNumber = in.readString();
 	}
 
     public String getCustomerProduct() {return this.customerProduct;}

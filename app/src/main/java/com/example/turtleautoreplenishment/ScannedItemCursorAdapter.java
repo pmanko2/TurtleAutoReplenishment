@@ -223,7 +223,7 @@ public class ScannedItemCursorAdapter extends CursorAdapter implements HttpDataD
                 params.add(new BasicNameValuePair("sql_id", Integer.toString(sqlID)));
                 params.add(new BasicNameValuePair("replenishment", replenishmentType));
 
-                HttpClient.getInstance().getJsonInBackground("POST", ScannedItemCursorAdapter.this, params);
+                HttpClient.getInstance().getJsonInBackground("POST", ScannedItemCursorAdapter.this, params, context);
             }
         });
 

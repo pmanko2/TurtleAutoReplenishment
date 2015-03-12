@@ -36,6 +36,7 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 {
 	private Cursor scannedItemsCursor;
     private int companyID;
+    private int shipTo;
     private ScannedItemDataSource dataSource;
     private ScannedItemCursorAdapter adapter;
 
@@ -50,11 +51,11 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 		Intent intent = getIntent();
 		scannedItemsCursor = dataSource.getAllItems();
         companyID = intent.getIntExtra("companyID", -1);
+        shipTo = intent.getIntExtra("shipTo", -1);
 
 		setContentView(R.layout.activity_scanned_items);
 
 		final ListView scannedList = (ListView) findViewById(R.id.scanned_items_view);
-		//final ScannedItemListAdapter adapter = new ScannedItemListAdapter(this, R.layout.scanned_item_item, dataSource);
 		adapter = new ScannedItemCursorAdapter(this, scannedItemsCursor, 0, dataSource);
 
 		scannedList.setAdapter(adapter);
@@ -169,7 +170,7 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 				}
 				else
 				{
-					getPOBoxFromUser();
+                    sendScannedItemsJson();
 				}
 
 			}
@@ -177,7 +178,7 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 		});
 	}
 
-	private void sendScannedItemsJson(String poBox)
+	private void sendScannedItemsJson()
 	{
 		ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 
@@ -199,15 +200,16 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
                 arrayItem.put("cust_part_no", item.getCustomerProduct());
                 arrayItem.put("desc_one", item.getDescOne());
                 arrayItem.put("desc_two", item.getDescTwo());
+                arrayItem.put("min", item.getMin());
+                arrayItem.put("max", item.getMax());
 
 				scannedItemsArray.put(arrayItem);
 			}
 
             request.put("customer_number",companyID);
-            request.put("ship_to","1234"); //TODO
+            request.put("ship_to", shipTo);
             request.put("user", AuthenticatedUser.getUser().getUserName());
 			request.put("item_list", scannedItemsArray);
-            request.put("po_number", poBox);
 
 		}catch(JSONException e)
 		{
@@ -219,7 +221,7 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
 
         Log.i("Report Request: ", request.toString());
 
-		HttpClient.getInstance().getJsonInBackground("POST", this, params);
+		HttpClient.getInstance().getJsonInBackground("POST", this, params, ScannedItemsActivity.this);
 
 	}
 
@@ -270,33 +272,34 @@ public class ScannedItemsActivity extends FragmentActivity implements HttpDataDe
                         Toast.LENGTH_LONG).show();
     }
 
-    private void getPOBoxFromUser()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("PO Number Needed");
-        builder.setMessage("Please Enter a PO Number for the order");
-
-        String poBoxToReturn;
-        final EditText poText = new EditText(this);
-        builder.setView(poText);
-
-        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i)
-        {
-            sendScannedItemsJson(poText.getText().toString());
-        }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i)
-            {
-            }
-        });
-
-        builder.create().show();
-    }
+    // NO LONGER NEEDED BY CUSTOMER
+//    private void getPOBoxFromUser()
+//    {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("PO Number Needed");
+//        builder.setMessage("Please Enter a PO Number for the order");
+//
+//        String poBoxToReturn;
+//        final EditText poText = new EditText(this);
+//        builder.setView(poText);
+//
+//        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+//        @Override
+//        public void onClick(DialogInterface dialogInterface, int i)
+//        {
+//            sendScannedItemsJson(poText.getText().toString());
+//        }
+//        });
+//
+//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i)
+//            {
+//            }
+//        });
+//
+//        builder.create().show();
+//    }
 
     @Override
     protected void onResume() {

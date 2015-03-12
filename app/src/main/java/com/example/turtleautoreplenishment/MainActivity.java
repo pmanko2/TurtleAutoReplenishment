@@ -93,7 +93,7 @@ public class MainActivity extends FragmentActivity implements
                     ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
                     params.add(new BasicNameValuePair("tag", "confirm_login"));
 
-                    HttpClient.getInstance().getJsonInBackground("POST", MainActivity.this, params);
+                    HttpClient.getInstance().getJsonInBackground("POST", MainActivity.this, params, MainActivity.this);
                 }
 			}
 			

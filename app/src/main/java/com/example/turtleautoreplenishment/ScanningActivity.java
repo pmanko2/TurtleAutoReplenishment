@@ -38,6 +38,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
     private boolean isAuto;
     private String barCode;
     private int companyID;
+    private int companyShipTo;
     private ScannedItemDataSource itemsDataSource;
 	
 	@Override
@@ -103,6 +104,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
         Intent intent = getIntent();
         String companyName = intent.getStringExtra("companyName");
         companyID = intent.getIntExtra("companyNumber",0);
+        companyShipTo = intent.getIntExtra("shipTo",0);
         setTitle(companyName);
 
         Button scanButton = (Button) findViewById(R.id.button_scan);
@@ -118,6 +120,7 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 
                 Intent scannedItems = new Intent(currentActivity, ScannedItemsActivity.class);
                 scannedItems.putExtra("companyID", companyID);
+                scannedItems.putExtra("shipTo", companyShipTo);
                 startActivity(scannedItems);
 
             }
@@ -171,18 +174,18 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 	{
 		final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 
-		barCode = result.getContents();
+		barCode = convertBarCodeToCorrectFormat(result.getContents());
 
         // scanning returns barcode - query db if barcode found otherwise indicate not found
 		if(barCode != null)
 		{
-			barCode = convertBarCodeToCorrectFormat(barCode);
 			
 			ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("tag", "barcode_info"));
 			params.add(new BasicNameValuePair("bar_code", barCode));
+            params.add(new BasicNameValuePair("ship_to", String.valueOf(companyShipTo)));
 			
-			HttpClient.getInstance().getJsonInBackground("POST", this, params);
+			HttpClient.getInstance().getJsonInBackground("POST", this, params, ScanningActivity.this);
 		}
 		else
 		{
@@ -201,27 +204,25 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
     // correct format has 11 characters
 	private String convertBarCodeToCorrectFormat(String barCode) 
 	{
-		int codeLength = barCode.length();
-		String toReturn = "";
-		
-		switch(codeLength)
-		{
-			case 12:
-				toReturn = barCode.substring(1);
-				break;
-			case 13:
-				toReturn = barCode.substring(0, codeLength - 2);
-				break;
-			case 14:
-				String temp = barCode.substring(1);
-				toReturn = temp.substring(0, temp.length() - 2);
-				break;
-			default:
-				toReturn = barCode;
-				break;
-		}
-		
-		return toReturn;
+        String converted = barCode.substring(1);
+
+        if(converted.length() < 7)
+        {
+            int numZeros = 7 - converted.length();
+            String leadingZeros = "";
+
+            for(int i = 0; i < numZeros; i++)
+            {
+                leadingZeros += "0";
+            }
+
+            converted = leadingZeros + converted;
+        }
+
+        converted = "M" + converted;
+        Log.i("Barcode Conversion", "Converted barcode: " + converted);
+        return converted;
+
 	}
 
 	// initiate scanning app on button click
@@ -300,8 +301,8 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
                     String secondDescription = returnJson.getString("description_2");
                     String min = returnJson.getString("min");
                     String max = returnJson.getString("max");
-                    String bin = returnJson.getString("bin");
                     String thirdDescription = returnJson.getString("description_3");
+                    String bin = "N/A";
 
                     autoFragment.setProductFound(customerProductId, description, turtleID, min, max,
                                                 bin, secondDescription, thirdDescription);
@@ -321,9 +322,8 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
 	}
 
     // Alert Dialog created to prompt if we want to add unknown product to order
-    private boolean promptAddProduct(final JSONObject returnJson)
+    private void promptAddProduct(final JSONObject returnJson)
     {
-        boolean add = false;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -346,8 +346,6 @@ public class ScanningActivity extends FragmentActivity implements HttpDataDelega
         });
 
         builder.create().show();
-
-        return add;
     }
 
     private void handleProduct(JSONObject returnJson, boolean add)

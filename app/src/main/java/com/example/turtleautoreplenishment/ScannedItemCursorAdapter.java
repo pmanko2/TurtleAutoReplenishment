@@ -31,7 +31,7 @@ import java.util.HashMap;
  * Created by Pawel on 11/6/2014.
  * Replaces arraylist adapter -- better integration with sqlite db
  */
-public class ScannedItemCursorAdapter extends CursorAdapter implements HttpDataDelegate
+public class ScannedItemCursorAdapter extends CursorAdapter
 {
     private LayoutInflater inflater;
     private Context context;
@@ -135,57 +135,6 @@ public class ScannedItemCursorAdapter extends CursorAdapter implements HttpDataD
         }
     }
 
-    //handle json return for edit item request
-    @Override
-    public void handleAsyncDataReturn(Object ret)
-    {
-        if(ret instanceof JSONObject)
-        {
-            JSONObject returnJson = (JSONObject) ret;
-
-            int success;
-
-            try
-            {
-                success = returnJson.getInt("success");
-
-                // if server was not able to confirm change, indicate with Toast
-                if(success == 0)
-                {
-                    Toast.makeText(context, "Item could not be edited. Server may be unresponsive.", Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    int sqlID = returnJson.getInt("sql_id");
-                    int quantity = returnJson.getInt("quantity");
-                    String min = returnJson.getString("min");
-                    String max = returnJson.getString("max");
-                    String rep = returnJson.getString("replenishment");
-                    ScannedItem item = dataSource.getScannedItemByID(sqlID);
-
-                    item.setQuantity(quantity);
-                    item.setMax(max);
-                    item.setMin(min);
-                    item.setReplenishmentType(rep);
-
-                    dataSource.updateItem(item, sqlID);
-
-                    dbCursor.requery(); // YES ITS FUCKING DEPRECATED IM WORKING ON IT
-                    notifyDataSetChanged();
-
-                    Toast.makeText(context, "Product " + item.getTurtleProduct() +
-                            " successfully edited", Toast.LENGTH_LONG).show();
-
-                }
-
-            } catch (JSONException e) {
-                Toast.makeText(context, "Item could not be edited. Server may be unresponsive.", Toast.LENGTH_LONG).show();
-            }
-
-        }
-
-    }
-
     private void showEditItemDialog(final ScannedItem item, final int sqlID)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -211,19 +160,25 @@ public class ScannedItemCursorAdapter extends CursorAdapter implements HttpDataD
 
             @Override
             public void onClick(DialogInterface dialogInterface, int id) {
+                int newQuantity = Integer.valueOf(qtyEdit.getText().toString());
+                String newRepType = (isAuto) ? "Auto" : "Manual";
 
-                ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-                String replenishmentType = (isAuto) ? "Auto" : "Manual";
-                params.add(new BasicNameValuePair("tag", "edit_item"));
-                params.add(new BasicNameValuePair("cust_no", "1")); //TODO change once everything connected
-                params.add(new BasicNameValuePair("cust_prod", item.getCustomerProduct()));
-                params.add(new BasicNameValuePair("new_max", "10"));
-                params.add(new BasicNameValuePair("new_min", "10"));
-                params.add(new BasicNameValuePair("quantity", qtyEdit.getText().toString()));
-                params.add(new BasicNameValuePair("sql_id", Integer.toString(sqlID)));
-                params.add(new BasicNameValuePair("replenishment", replenishmentType));
+                if(newQuantity == item.getQuantity() && newRepType.equals(item.getReplenishmentType())) {
+                    Toast.makeText(context, "Nothing to edit", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    item.setQuantity(newQuantity);
+                    item.setReplenishmentType(newRepType);
+                    dataSource.updateItem(item, item.getSqLiteID());
 
-                HttpClient.getInstance().getJsonInBackground("POST", ScannedItemCursorAdapter.this, params, context);
+                    dbCursor.requery(); // YES ITS DEPRECATED IM WORKING ON IT
+                    notifyDataSetChanged();
+
+                    Toast.makeText(context, "Product " + item.getTurtleProduct() +
+                            " successfully edited", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
 

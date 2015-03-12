@@ -66,7 +66,6 @@ public class ChooseCustomerActivity extends FragmentActivity implements
 	@Override
 	public boolean onNavigationItemSelected(int arg0, long arg1) 
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
